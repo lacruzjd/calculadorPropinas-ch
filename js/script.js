@@ -284,8 +284,6 @@ if (entrar) {
         const beneficiado = prompt('Ingresa el nombre del beneficiado')
         if (beneficiado) {
             agregarBeneficiado(beneficiado)
-        } else {
-            continuar = false
         }
     } while (confirm('Desea agregar otro Beneficiado?'))
 
@@ -296,8 +294,6 @@ if (entrar) {
 
         if (dia && monto) {
             agregarPropinas(dia, monto)
-        } else {
-            continuar = false
         }
     } while (confirm('Desea agregar otro Dia?'))
 
@@ -327,9 +323,7 @@ if (entrar) {
 
             if (nombre && dia && monto) {
                 adelantoTercero(nombre, dia, monto)
-            } else {
-                continuar = false
-            }
+            } 
         } while (confirm('Desea agregar otro Descuento de terceros?'))
 
     }
@@ -343,8 +337,6 @@ if (entrar) {
 
             if (numero && dias) {
                 agregarDiasFalatantes(numero, dias)
-            } else {
-                continuar = false
             }
         } while (confirm('Desea agregar mas beneficiados con dias faltantes?'))
 
