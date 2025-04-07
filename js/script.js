@@ -20,7 +20,6 @@ function obtenerBeneficiadoId(idBeneficiado) {
     }
     console.log('Beneficiado no encontrado')
     return null
-
 }
 
 //Listar beneficiarios
@@ -403,13 +402,9 @@ if (entrar) {
             Propina por dia: ${reporte[0][1].propinaPorDia}
             Propina por beneficiado sin descuentos: ${reporte[0][2].propinaPorBeneficiadoSinDescuentos}
             Beneficiados: ${beneficiadoInforme}
-            
-    
             `)
-
-
-
 }
+
 /*
 
 // pruebas
