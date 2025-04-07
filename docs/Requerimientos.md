@@ -27,25 +27,20 @@
 
 - El sistema debe calcular automáticamente el total de propinas recaudadas de toda la semana.
 
-**5. Distribución de Propinas:**
-
-- El sistema debe restar del total de propinas los adelantos registrados.
-- El sistema debe dividir el monto restante de las propinas de manera equitativa entre todos los beneficiarios.
-
-**6. Cálculo de Propina Diaria por Beneficiario:**
+**5. Cálculo de Propina Diaria por Beneficiario:**
 
 - El sistema debe calcular la propina promedio por día trabajado para cada beneficiario.
 
-**7. Descuentos por Ausencias:**
+**6. Descuentos por Ausencias:**
 
 - El sistema debe calcular el monto a descontar a cada beneficiario por sus días de ausencia.
 - El monto total de los descuentos por ausencia debe dividirse equitativamente entre los beneficiarios que no registraron ausencias.
 
-**8. Descuentos por Adelantos:**
+**7. Descuentos por Adelantos:**
 
 - El sistema debe descontar del monto de propina correspondiente a cada beneficiario los adelantos que haya recibido.
 
-**9. Generación de Reporte de Distribución:**
+**8. Generación de Reporte de Distribución:**
 
 - El sistema debe generar un reporte detallado que muestre:
   - El monto total de propinas recaudadas.
