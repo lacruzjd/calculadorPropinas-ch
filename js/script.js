@@ -33,8 +33,6 @@ function listarBeneficiados() {
 }
 
 //Registro de propinas y adelantos
-const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
-const diasRegistrados = []
 const propinas = []
 
 //Eliminar el dia de la semana de diasSemana y guardarlo en dias registrados
