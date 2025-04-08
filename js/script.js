@@ -19,7 +19,6 @@ function obtenerBeneficiadoId(idBeneficiado) {
         }
     }
     console.log('Beneficiado no encontrado')
-    return null
 }
 
 //Listar beneficiarios
@@ -28,56 +27,42 @@ function listarBeneficiados() {
         return beneficiados
     } else {
         console.log('No hay beneficiados agregados')
-        return null
     }
 }
 
 //Registro de propinas y adelantos
-const diasSemana = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado']
-const diasRegistrados = []
-const propinas = []
-
-//Eliminar el dia de la semana de diasSemana y guardarlo en dias registrados
-function diaEnRegistro() {
-    diasRegistrados.push(diasSemana.shift())
-    return diasRegistrados[diasRegistrados.length - 1]
-}
+const propinas = [{ dia: 'domingo', monto: 0 }, { dia: 'lunes', monto: 0 }, { dia: 'martes', monto: 0 }, { dia: 'miercoles', monto: 0 }, { dia: 'jueves', monto: 0 }, { dia: 'viernes', monto: 0 }, { dia: 'sabado', monto: 0 }]
 
 //Agregar propina
 function agregarPropinas(diaSemana, monto) {
     if (!isNaN(monto)) {
-        propinas.push({ diaSemana, monto })
+        for (const propina of propinas) {
+            if (propina.dia === diaSemana.toLowerCase()) {
+                propina.monto = monto
+            }
+        }
         console.log('Monto agregado')
+        console.log(propinas)
     } else {
         console.log('Monto no valido')
-        return null
     }
 }
 
 //Listar propinas
-function listarPropinas() {
-    if (propinas.length > 0) {
-        return propinas
-    } else {
-        console.log('No hay propinas registradas')
-        return null
-    }
+function obtenerPropinas() {
+    return propinas
 }
 
 // calcular total propinas
 function totalPropinas() {
     let total = 0
-
-    if (listarPropinas()) {
-        for (const propina of propinas) {
-            total += propina.monto
-        }
-        return total
+    for (const propina of propinas) {
+        total += propina.monto
     }
+    return total
 }
 
 //dividir propina entre los beneficiados sin descuentos 
-
 function propinaPorBeneficiadoSinDescuentos() {
     const total = totalPropinas()
 
@@ -118,7 +103,6 @@ function listarTerceros() {
         return terceros
     } else {
         console.log('No hay terceros registrados')
-        return null
     }
 }
 
@@ -250,10 +234,10 @@ function reporteDistribucion() {
     let metaData = []
     let totales = []
 
-    metaData.push({ totalPropinas: totalPropinas() })
-    metaData.push({ propinaPorDia: propinaPorDiaBeneficiario() })
-    metaData.push({ propinaPorBeneficiadoSinDescuentos: propinaPorBeneficiadoSinDescuentos() })
-    metaData.push({ propinasEntregadas: listarPropinas() })
+    metaData.push({ totalPropinas: totalPropinas() || 0 })
+    metaData.push({ propinaPorDia: propinaPorDiaBeneficiario() || 0 })
+    metaData.push({ propinaPorBeneficiadoSinDescuentos: propinaPorBeneficiadoSinDescuentos() || 0 })
+    metaData.push({ propinasEntregadas: obtenerPropinas() || 0 })
 
     for (const beneficiado of beneficiados) {
         totales.push(
@@ -261,10 +245,10 @@ function reporteDistribucion() {
                 id: beneficiado.id,
                 nombre: beneficiado.nombre,
                 diasFaltantes: beneficiado.diasFaltantes || 0,
-                descuentosDiasFaltantes: beneficiado.descuentosDiasFaltantes,
-                descuentosAdelantos: beneficiado.descuentosPorAdelantos,
-                totalDescuentos: beneficiado.totalDescuentos,
-                total: beneficiado.total
+                descuentosDiasFaltantes: beneficiado.descuentosDiasFaltantes || 0,
+                descuentosAdelantos: beneficiado.descuentosPorAdelantos || 0,
+                totalDescuentos: beneficiado.totalDescuentos || 0,
+                total: beneficiado.total || 0
             }
         )
     }
@@ -274,81 +258,68 @@ function reporteDistribucion() {
     return reporte
 }
 
-
 // interfaz
-
 const entrar = confirm('Calculadora de propinas \n ¿Deseas continuar?')
-
-//Mostrar lista de  beneficiados con numero y nombre
 
 if (entrar) {
 
+    //Generar lista de beneficiados agregados
     function generalista() {
-        let lista = 'Beneficiados Agregados: \n'
+        let lista = 'Beneficiados Agregados:\n'
         for (const beneficiado of beneficiados) {
-            lista += `Nro: ${beneficiado.id} Nombre: ${beneficiado.nombre} \n`
+            lista += `Nro: ${beneficiado.id}. Nombre: ${beneficiado.nombre}\n`
         }
         return lista
     }
 
-
-    // agregar beneficiados
-    do {
-        const beneficiado = prompt(`Ingresa el nombre del beneficiado`)
-        if (beneficiado) {
-            agregarBeneficiado(beneficiado)
-        }
-    } while (confirm(`Desea agregar otro Beneficiado? \n ${generalista()}`))
-
-    //agregar propinas 
-
+    //Generar lista de propinas agregadas
     function generalistaDiasPropinas() {
-        let lista = 'Propinas Agregadas: \n'
+        let lista = 'Propinas Agregadas:\n'
         for (const propina of propinas) {
-            lista += `Dia: ${propina.diaSemana} monto: ${propina.monto} \n`
+            lista += `Dia: ${propina.dia.toUpperCase()}. Monto: ${propina.monto}\n`
         }
         return lista
     }
 
-    function generalistaDias() {
-        let lista = 'Propinas Agregadas: \n'
-        for (const propina of propinas) {
-            lista += `Dia: ${propina.diaSemana} \n`
-        }
-        return lista
+    //Agregar beneficiados
+    function agregarBeneficiadoInterfaz() {
+
+        do {
+            const beneficiado = prompt(`Ingresa el nombre del beneficiado`)
+            if (beneficiado) {
+                agregarBeneficiado(beneficiado)
+            }
+        } while (confirm(`${generalista()}\nDesea agregar otro Beneficiado?`))
+
+
     }
 
-    if(confirm('Desea agregar propinas?')) {
-
+    //Agregar propinas
+    function agregarPropinasInterfaz() {
         do {
             const dia = prompt('Agregar dia')
             const monto = parseInt(prompt(`Agregar monto`))
-    
+
             if (dia && monto) {
                 agregarPropinas(dia, monto)
             }
-        } while (confirm(`Desea agregar otro Dia? \n ${generalistaDiasPropinas()}`))
+        } while (confirm(`${generalistaDiasPropinas()}\nDesea agregar otro Dia?`))
     }
 
     //agregar adelantos 
-    if (confirm('Desea agregar adelantos?')) {
-
+    function agregarAdelantosInterfaz() {
         do {
             const numero = parseInt(prompt(`Agregar el numero del beneficiado \n${generalista()}`))
-            const dia = prompt(`Agregar el dia\n dias disponibles: ${generalistaDias()}}`)
+            const dia = prompt(`Agregar el dia`)
             const monto = parseInt(prompt('Agregar el monto')) || 0
 
             if (numero && dia && monto) {
                 adelantoBeneficiado(numero, dia, monto)
-            } else {
-                continuar = false
             }
-        } while (confirm('Desea agregar otro Descuento?'))
-
+        } while (confirm('Desea agregar otro Adelanto?'))
     }
 
-    if (confirm('Desea agregar adelantos de terceros?')) {
-
+    function agregarAdelantosTercerosInterfaz() {
         do {
             const nombre = prompt('Agregar el nombre')
             const dia = prompt('Agregar el dia')
@@ -357,12 +328,12 @@ if (entrar) {
             if (nombre && dia && monto) {
                 adelantoTercero(nombre, dia, monto)
             }
-        } while (confirm('Desea agregar otro Descuento de terceros?'))
+        } while (confirm('Desea agregar otro Adelanto de terceros?'))
 
     }
 
     //Agregar dias faltantes
-    if (confirm('Desea agregar dias faltantes?')) {
+    function agregarDiasFaltantesInterfaz() {
 
         do {
             const numero = parseInt(prompt(`Agregar el numero del beneficiado \n ${generalista()}`))
@@ -375,15 +346,20 @@ if (entrar) {
 
     }
 
-    calcularPropinaTotal()
 
-    const reporte = reporteDistribucion()
-    console.log(reporte)
 
-    let beneficiadoInforme = ''
+    //Generar Reporte 
+    function generarReporte() {
 
-    for (const beneficiado of reporte[1]) {
-        beneficiadoInforme += `
+        calcularPropinaTotal()
+
+        const reporte = reporteDistribucion()
+        console.log(reporte)
+
+        let beneficiadoInforme = ''
+
+        for (const beneficiado of reporte[1]) {
+            beneficiadoInforme += `
         -----------------------------
         Beneficiado: ${beneficiado.nombre}
         Dias faltantes: ${beneficiado.diasFaltantes}
@@ -393,20 +369,56 @@ if (entrar) {
         Total a pagar: ${beneficiado.total}
         -----------------------------
         `
+        }
+
+        alert(`
+        REPORTE:
+        Total de propinas: ${reporte[0][0].totalPropinas}
+        Propina por dia: ${reporte[0][1].propinaPorDia}
+        Propina por beneficiado sin descuentos: ${reporte[0][2].propinaPorBeneficiadoSinDescuentos}
+
+        Beneficiados: ${beneficiadoInforme}
+        `)
     }
 
+    //Menu
+    let continuar = true
 
-    alert(`
-            REPORTE:
-            Total de propinas: ${reporte[0][0].totalPropinas}
-            Propina por dia: ${reporte[0][1].propinaPorDia}
-            Propina por beneficiado sin descuentos: ${reporte[0][2].propinaPorBeneficiadoSinDescuentos}
-            Beneficiados: ${beneficiadoInforme}
-            `)
+    //Opciones del menu 
+    const opciones = ' 1. Agregar beneficiado\n 2. Agregar propinas\n 3. Agregar adelantos\n 4. Agregar adelantos de terceros\n 5. Agregar dias faltantes\n 6. Generar reporte\n 7. Salir'
+
+    do {
+        switch (prompt(opciones)) {
+            case '1':
+                agregarBeneficiadoInterfaz()
+                break
+            case '2':
+                agregarPropinasInterfaz()
+                break
+            case '3':
+                agregarAdelantosInterfaz()
+                break
+            case '4':
+                agregarAdelantosTercerosInterfaz()
+                break
+            case '5':
+                agregarDiasFaltantesInterfaz()
+                break
+            case '6':
+                generarReporte()
+                break
+            case '7':
+                continuar = false
+                break
+            default:
+                alert('Opcion no valida')
+                break
+        }
+
+    } while (continuar)
 }
 
 /*
-
 // pruebas
 
 agregarBeneficiado('jose')
@@ -426,11 +438,9 @@ agregarPropinas('miercoles', 100)
 agregarPropinas('jueves', 100)
 agregarPropinas('viernes', 100)
 agregarPropinas('sabado', 200)
-console.log('lista de propinas', listarPropinas())
 
 adelantoBeneficiado(1, 'domingo', 50)
 adelantoBeneficiado(2, 'domingo', 50)
-adelantoBeneficiado(10, 'domingo', 50)
 
 agregarDiasFalatantes(1, 2)
 agregarDiasFalatantes(3, 2)
