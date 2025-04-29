@@ -559,7 +559,6 @@ propinasSection.innerHTML = `
 </div>
 
 `
-
 function cardPropina(propina) {
     let propinadiv = document.createElement('div')
     propinadiv.className = 'propina'
