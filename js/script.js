@@ -467,7 +467,6 @@ function cargarEventosFichaBeneficiado() {
                     cargarEventosFichaBeneficiado()
                 }
 
-                boton.parentElement.querySelector('select').value = ''
                 boton.parentElement.querySelector('input').value = ''
             }
         }
@@ -490,15 +489,13 @@ function cargarEventosFichaBeneficiado() {
                     let agregado = agregarDiasFalatantes(id, dia)
 
                     agregado = validar(agregado, boton.parentElement, 'Dia ya Agregado')
+                    agregado = validar(agregado, boton.parentElement, 'Dia ya Agregado')
 
                     if (agregado) {
                         boton.parentElement.parentElement.querySelector('ul').appendChild(item(null, `${dia}<button class="eliminar" function="eliminar-dia-faltante" id-beneficiado="${id}" dia="${dia}">Eliminar</button>`))
 
                         cargarEventosFichaBeneficiado()
                     }
-
-                    boton.parentElement.querySelector('select').value = ''
-
 
                 }
             }
