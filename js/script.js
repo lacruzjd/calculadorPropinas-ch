@@ -1,367 +1,723 @@
 //Gestion de beneficiados
-const beneficiados = []
-const terceros = []
+class Beneficiado {
+    static sumarId = 1
+    static totalBeneficiados = 1
+    constructor() {
+        Beneficiado.totalBeneficiados++
+        this.id = Beneficiado.sumarId++
+        this.nombre = null
+        this.adelantos = []
+        this.diasFaltantes = []
+    }
 
-//Agregar beneficiado
+    setNombre(nombre) {
+        if (typeof nombre === 'string' && nombre.trim() !== '') {
+            this.nombre = nombre
+        } else {
+            return null
+        }
+    }
+
+    setAdelanto(dia, monto) {
+        if (typeof dia === 'string' && dia.trim() !== '' && typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
+
+            if (!this.adelantos.some(adelanto => adelanto.dia === dia)) {
+                this.adelantos.push({ dia, monto })
+
+                return true
+            }
+
+            this.adelantos.forEach(adelanto => {
+                if (adelanto.dia === dia) {
+                    adelanto.monto += monto
+                }
+            })
+
+            return true
+
+        } else {
+            return false
+        }
+    }
+
+    setDiaFaltante(dia) {
+        if (typeof dia === 'string' && dia.trim() !== '' && !this.diasFaltantes.includes(dia)) {
+            this.diasFaltantes.push(dia)
+        } else {
+            return null
+        }
+    }
+}
+class Propina {
+    static semana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
+    constructor() {
+        this.dia = null
+        this.monto = 0
+    }
+
+    setPropina(dia, monto) {
+        if (typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
+            this.dia = dia
+            this.monto = monto
+        } else {
+            return null
+        }
+    }
+}
+class CalculadorTotal {
+    constructor() {
+        this.beneficiados = []
+        this.propinas = []
+        this.totalBeneficiados = 0
+        this.totaPropinasAgregadas = 0
+        this.totalPropinas = 0
+    }
+
+    setBeneficiados(beneficados) {
+        if (Array.isArray(beneficados)) {
+            this.beneficiados = beneficados
+        }
+    }
+
+    setPropinas(propinas) {
+        if (Array.isArray(propinas)) {
+            this.propinas = propinas
+        }
+    }
+
+    //Establecer datos para los calculos
+    setTotalesIniciales() {
+        this.totalBeneficiados = this.beneficiados.length
+        this.totaPropinasAgregadas = this.propinas.length
+        this.totalPropinas = this.propinas.reduce((acc, propina) => acc + propina.monto, 0)
+    }
+
+    //Asigna el monto de las propinas diarias a los asistentes
+    setPropinasDiarias() {
+        this.beneficiados.forEach(beneficiado => {
+            beneficiado.propinasEntregadasPorDia = []
+        })
+
+        this.propinas.forEach(propina => {
+
+            const asistentes = this.beneficiados.filter(beneficiado => !beneficiado.diasFaltantes.includes(propina.dia))
+
+            let totalAsistentes = asistentes.length
+            let monto = propina.monto / totalAsistentes
+
+            asistentes.forEach(beneficiado => {
+                beneficiado.propinasEntregadasPorDia.push({ dia: propina.dia, monto })
+            })
+        })
+    }
+
+    //Establecer la suma de los descuentos por adelantos
+    setTotalDescuentos() {
+        this.beneficiados.forEach(beneficiado => {
+            beneficiado.totalDescuentos = beneficiado.totalDescuentosAdelantos
+        })
+    }
+
+    //Estabelcer el total de los descuentos por beneficiado
+    setTotalDescuentosAdelantos() {
+        this.beneficiados.forEach(beneficiado => {
+            beneficiado.totalDescuentosAdelantos = beneficiado.adelantos.reduce((acc, adelanto) => acc += adelanto.monto, 0)
+        })
+    }
+
+    //Establecer el monto a entregar
+    setTotal() {
+        beneficiados.forEach(beneficiado => {
+            beneficiado.total = beneficiado.propinasEntregadasPorDia.reduce((acc, dia) => acc + dia.monto, 0)
+            if (beneficiado.totalDescuentos > 0) {
+                beneficiado.totalEntrega = beneficiado.total - beneficiado.totalDescuentos
+            } else {
+                beneficiado.totalEntrega = beneficiado.total
+
+            }
+        })
+    }
+
+    calcular() {
+        this.setTotalesIniciales()
+        this.setPropinasDiarias()
+        this.setTotalDescuentosAdelantos()
+        this.setTotalDescuentos()
+        this.setTotal()
+
+        return {
+            resultados: this.beneficiados,
+            estadisticaPropinas: [{
+                totalRecibidas: this.totalPropinas
+            }]
+        }
+    }
+
+}
+
+// Agregar beneficiado
 function agregarBeneficiado(nombre) {
-    beneficiados.push({ id: beneficiados.length + 1, nombre })
-    console.log(`Agregado ${nombre}`)
+    if (typeof nombre === 'string' && nombre.trim() !== '') {
+        console.log('agreagr')
+        const beneficiado = new Beneficiado()
+        beneficiado.setNombre(nombre)
+        beneficiados.push(beneficiado)
+        return true
+    } else {
+        return false
+    }
 }
 
 // Obtener beneficiado por id
 function obtenerBeneficiadoId(idBeneficiado) {
-    for (const beneficiado of beneficiados) {
-        if (beneficiado.id === idBeneficiado) {
-            return beneficiado
-        }
+    let beneficiado = beneficiados.find(beneficiado => beneficiado.id === idBeneficiado)
+    if (beneficiado !== undefined) {
+        return beneficiado
+    } else {
+        return false
     }
-    console.log('Beneficiado No encontrado')
 }
 
-//PROPINAS
-//Registro de propinas y adelantos
-const propinas = [{ dia: 'domingo', monto: 0 }, { dia: 'lunes', monto: 0 }, { dia: 'martes', monto: 0 }, { dia: 'miercoles', monto: 0 }, { dia: 'jueves', monto: 0 }, { dia: 'viernes', monto: 0 }, { dia: 'sabado', monto: 0 }]
+// Eliminar beneficiado 
+function eliminarBeneficiado(id) {
+    let beneficiado = obtenerBeneficiadoId(id)
+
+    if (beneficiado) {
+        beneficiados = beneficiados.filter(beneficiado => beneficiado.id !== id)
+        return true
+    }
+}
+
+// Agregar adelantos
+function agregarAdelanto(id, dia, monto) {
+    let beneficiado = obtenerBeneficiadoId(id)
+
+    if (beneficiado !== null && typeof dia === 'string' && typeof monto === 'number') {
+        beneficiado.setAdelanto(dia, monto)
+        return true
+    }
+}
+
+//Eliminar Adelanto
+function eliminarAdelanto(id, dia) {
+    let beneficiado = obtenerBeneficiadoId(id)
+    console.log(beneficiado, dia)
+
+    if (beneficiado !== null && typeof dia === 'string' && dia.trim() !== '') {
+        beneficiado.adelantos = beneficiado.adelantos.filter(adelanto => adelanto.dia !== dia)
+
+        return true
+    }
+}
+
+// Agregar dias faltantes
+function agregarDiasFalatantes(id, dia) {
+    let beneficiado = obtenerBeneficiadoId(id)
+
+    if (beneficiado !== null && !beneficiado.diasFaltantes.includes(dia)) {
+        beneficiado.setDiaFaltante(dia)
+        return true
+    }
+}
+
+//Eliminar Dias Faltantes 
+function eliminarDiaFaltante(id, dia) {
+    let beneficado = obtenerBeneficiadoId(id)
+
+    if (beneficado) {
+        beneficado.diasFaltantes = beneficado.diasFaltantes.filter(diaFaltante => diaFaltante !== dia)
+        return true
+    }
+}
 
 //Agregar propina
 function agregarPropinas(diaSemana, monto) {
-    if (typeof monto === 'number') {
-        for (const propina of propinas) {
-            if (propina.dia === diaSemana.toLowerCase()) {
-                propina.monto += monto
-                break
-            }
+    if (typeof diaSemana === 'string' && diaSemana.trim() !== '' && typeof monto === 'number') {
+        if (Propina.semana.includes(diaSemana.trim().toLowerCase())) {
+            let propina = new Propina()
+
+            propina.setPropina(diaSemana, monto)
+            propinas.push(propina)
+
+            return true
         }
-        return console.log('Monto agregado')
     } else {
-        return console.log('Monto o dia no valido')
+        return false
     }
 }
 
-//Calcular total propinas
-function totalPropinas() {
-    let total = 0
-    for (const propina of propinas) {
-        total += propina.monto
+function eliminarPropina(dia) {
+    if (typeof dia === 'string' && dia.trim() !== '') {
+        propinas = propinas.filter(propina => propina.dia !== dia)
+        return true
     }
-    return total
+
+    return false
 }
 
-function estadisticaPropinas() {
-    let total = totalPropinas()
-    let proppinaIndividuaSinDescuentos = 0
-    let propinaPorDia = 0
+//Generar totales
+function generarTotales(beneficados, propinas) {
+    let calculadorPropina = new CalculadorTotal()
 
-    if (total > 0 && beneficiados.length > 0) {
-        proppinaIndividuaSinDescuentos = total / beneficiados.length
-        propinaPorDia = (total / 7) / beneficiados.length
-    }
+    calculadorPropina.setBeneficiados(beneficados)
+    calculadorPropina.setPropinas(propinas)
 
-    return {
-        total, proppinaIndividuaSinDescuentos, propinaPorDia
+    // retorna un array con los totales
+    return calculadorPropina.calcular()
+}
+
+//Obtener datos de localstorage
+function getDatos(key, procesarDatos) {
+    let datosGuardados = JSON.parse(localStorage.getItem(key))
+
+    if (datosGuardados) {
+        return procesarDatos(datosGuardados)
     }
 }
 
-//Calcular el total de propina para cada beneficiado sin descuentos
-function agregartotalPropinaSinDescuentos() {
-    for (const beneficiado of beneficiados) {
-        beneficiado.totalPropinaSinDescuentos = estadisticaPropinas().proppinaIndividuaSinDescuentos
+//Guardar Datos en Localstorage
+function setDatos(key, data) {
+    if (data) {
+        localStorage.setItem(key, JSON.stringify(data))
     }
+
+    return false
 }
 
-//Agregar adelantos
-function adelantoBeneficiado(id, diaSemana, monto) {
-    let beneficiado = obtenerBeneficiadoId(id)
+//Cargar objetos Beneficiados
+function cargarBeneficiados(data) {
+    return data.map(beneficiadoGuardado => {
+        const beneficiado = new Beneficiado()
 
-    if (beneficiado && typeof monto === 'number') {
-        beneficiado.adelantos = []
-        beneficiado.adelantos.push({ diaSemana, monto })
-        console.log('Monto agregado')
+        beneficiado.setNombre(beneficiadoGuardado.nombre)
+        beneficiado.id = beneficiadoGuardado.id
+        beneficiado.adelantos = beneficiadoGuardado.adelantos
+        beneficiado.diasFaltantes = beneficiadoGuardado.diasFaltantes
+
+        return beneficiado
+    })
+}
+
+//Cargar objetos Propinas
+function cargarPropinas(data) {
+    return data.map(valor => {
+        const propina = new Propina()
+        propina.setPropina(valor.dia, valor.monto)
+        return propina
+    })
+}
+
+// INTERFAZ
+//Componente selector de dias 
+function selectorDias(nombre, id) {
+    return `
+    <select name="${nombre}" id="${id}">
+        <option value="lunes">Lunes</option>
+        <option value="martes">Martes</option>
+        <option value="miércoles">Miércoles</option>
+        <option value="jueves">Jueves</option>
+        <option value="viernes">Viernes</option>
+        <option value="sábado">Sábado</option>
+        <option value="domingo">Domingo</option>
+    </select>`
+}
+
+function error(mensaje) {
+    let errorCard = document.createElement('div')
+    errorCard.className = 'error'
+    errorCard.innerHTML = `
+    <p><strong>${mensaje}</strong></p>
+    `
+    return errorCard
+}
+
+function itemPropina(id, contenido) {
+    let li = document.createElement('li')
+    li.className = 'propina'
+    li.id = id
+    li.innerHTML = contenido
+    return li
+}
+
+function item(id, contenido) {
+    let li = document.createElement('li')
+    li.id = id
+    li.innerHTML = contenido
+    return li
+}
+
+// Validar 
+function validar(dato, nodoRender, mensaje) {
+    if (dato) {
+
+        let errorMensaje = nodoRender.querySelector('.error')
+
+        if (errorMensaje) {
+            errorMensaje.remove()
+        }
+        console.log(dato)
+        return dato
     } else {
-        console.log('Numero de beneficiario no valido')
-    }
-}
+        let errorMensaje = nodoRender.querySelector('.error')
 
-
-//Agregar adelanto a un tercero
-function adelantoTercero(nombre, diaAdelanto, monto) {
-    terceros.push({ nombre, diaAdelanto, monto })
-    console.log('Monto agregado')
-}
-
-//Agregar dias faltantes
-function agregarDiasFalatantes(id, dias) {
-    let beneficiado = obtenerBeneficiadoId(id)
-
-    if (beneficiado && typeof dias === 'number') {
-        beneficiado.diasFaltantes = dias
-        console.log('Dias faltantes agregados')
-    } else {
-        console.log('Numero de beneficiario o  cantidad de dias invalidos')
-    }
-}
-
-
-//Descuento por adelantos 
-
-//Acumulado de descuentos por dias faltantes
-let acumuladoDiasFaltantes = 0
-
-function asignarDescuetos() {
-    for (const beneficiado of beneficiados) {
-        if (beneficiado.adelantos && beneficiado.diasFaltantes) {
-            for (const adelanto of beneficiado.adelantos) {
-                beneficiado.descuentosPorAdelantos = 0
-                beneficiado.descuentosDiasFaltantes = 0
-                beneficiado.descuentosPorAdelantos += adelanto.monto
-                beneficiado.descuentosDiasFaltantes = estadisticaPropinas().propinaPorDia * beneficiado.diasFaltantes
-                acumuladoDiasFaltantes = + beneficiado.descuentosDiasFaltantes
-            }
-        } else {
-            beneficiado.descuentosPorAdelantos = 0
-            beneficiado.descuentosDiasFaltantes = 0
+        if (errorMensaje) {
+            errorMensaje.remove()
         }
+
+        nodoRender.appendChild(error(mensaje))
+        return null
     }
 }
 
-//Sumar los descuentos
-function totalizarDescuentos() {
-    for (const beneficiado of beneficiados) {
-        if (beneficiado.descuentosPorAdelantos || beneficiado.descuentosDiasFaltantes) {
-            beneficiado.totalDescuentos = 0
+const render = document.getElementById('app')
 
-            if (beneficiado.descuentosPorAdelantos) {
-                beneficiado.totalDescuentos += beneficiado.descuentosPorAdelantos
-            }
+// ***Seccion Beneficiados***
+let beneficiados = getDatos('beneficiados', cargarBeneficiados) || []
 
-            if (beneficiado.descuentosDiasFaltantes) {
-                beneficiado.totalDescuentos += beneficiado.descuentosDiasFaltantes
-            }
-        }
-        else {
-            beneficiado.totalDescuentos = 0
-        }
-    }
-}
+const beneficiadosSection = document.getElementById('beneficiados')
+beneficiadosSection.innerHTML = `
+<h2>Beneficiados<h2/>
+<section id="lista-beneficiados"></section>
+<div class="entradas">
+    <input type="text" id="input-beneficiado-nombre" placeholder="Nombre" required>
+    <button id="agregar-beneficiado">Agregrar</button>
+    <br>
+    <button id="respaldar-beneficiados" class="respaldar">Respaldar</button>
+    <button id="borrar-beneficiados" class="respaldar">Borrar Resplado</button>
+</div>
+`
 
-//Aplicar Descuentos
-function aplicarDescuentos() {
-    for (const beneficiado of beneficiados) {
-        if (beneficiado.totalDescuentos > 0) {
-            beneficiado.totalPropinaConDescuentos = beneficiado.totalPropinaSinDescuentos - beneficiado.totalDescuentos
-        }
-        else {
-            beneficiado.totalPropinaConDescuentos = 0
-        }
-    }
-}
+function cardBeneficiado(beneficiado) {
 
-//Sumar el acumulado por ausencia entre los que no faltaron
-function repartirAcumuladoDiasFaltantes() {
-    const acumuladoDescuentos = acumuladoDiasFaltantes
-    let beneficiadoSinFaltas = 0
+    let id = beneficiado.id
+    let cardBeneficiado = document.createElement('div')
 
-    for (const beneficiado of beneficiados) {
-        if (beneficiado.diasFaltantes) {
-            beneficiadoSinFaltas++
-        }
-    }
-
-    for (const beneficiado of beneficiados) {
-        if (!beneficiado.diasFaltantes) {
-            beneficiado.total = beneficiado.totalPropinaSinDescuentos + (acumuladoDescuentos / beneficiadoSinFaltas) - beneficiado.totalDescuentos
-
-        } else {
-            beneficiado.total = beneficiado.totalPropinaConDescuentos
-        }
-    }
-}
-
-function calcularPropinaTotal() {
-    agregartotalPropinaSinDescuentos()
-    asignarDescuetos()
-    totalizarDescuentos()
-    aplicarDescuentos()
-    repartirAcumuladoDiasFaltantes()
-}
-
-//Generar reporte de la distribucion del la propina
-function reporteDistribucion() {
-    let reporte = []
-
-    reporte.push({ metadata: estadisticaPropinas() })
-    reporte.push({ diasEntregados: propinas })
-    reporte.push({ totales: beneficiados })
-
-    return reporte
-}
-
-
-
-// interfaz
-const entrar = confirm('Calculadora de propinas \n ¿Deseas continuar?')
-
-if (entrar) {
-
-    //Generar lista de beneficiados agregados
-    function generalista() {
-        let lista = 'Beneficiados Agregados:\n'
-        for (const beneficiado of beneficiados) {
-            lista += `Nro: ${beneficiado.id}. Nombre: ${beneficiado.nombre}\n`
-        }
-        return lista
-    }
-
-    //Agregar beneficiados
-    function agregarBeneficiadoInterfaz() {
-
-        do {
-            const beneficiado = prompt(`Ingresa el nombre del beneficiado`)
-            if (beneficiado) {
-                agregarBeneficiado(beneficiado)
-            }
-        } while (confirm(`${generalista()}\nDesea agregar otro Beneficiado?`))
-
-
-    }
-
-    //Agregar propinas
-    function agregarPropinasInterfaz() {
-        do {
-            const dia = prompt('Agregar dia')
-            const monto = parseInt(prompt(`Agregar monto`)) || 0
-
-            if (dia && monto) {
-                agregarPropinas(dia, monto)
-            }
-        } while (confirm(`${listarPropinas()}\nDesea agregar otro Dia?`))
-    }
-
-    //agregar adelantos 
-    function agregarAdelantosInterfaz(mensaje, grupo) {
-        do {
-            const numero = parseInt(prompt(`${mensaje} \n${generalista() || ''}`))
-            const dia = prompt(`Agregar el dia`)
-            const monto = parseInt(prompt('Agregar el monto')) || 0
-
-            if (numero && dia && monto) {
-                grupo(numero, dia, monto)
-            }
-        } while (confirm('Desea agregar otro Adelanto?'))
-    }
-
-    //Agregar dias faltantes
-    function agregarDiasFaltantesInterfaz() {
-        do {
-            const numero = parseInt(prompt(`Agregar el numero del beneficiado \n ${generalista()}`))
-            const dias = parseInt(prompt('Agregar los dias faltantes')) || 0
-
-            if (numero && dias) {
-                agregarDiasFalatantes(numero, dias)
-            }
-        } while (confirm('Desea agregar mas beneficiados con dias faltantes?'))
-    }
-
-    //Generar Reporte 
-    function generarReporte() {
-        calcularPropinaTotal()
-
-        const reporte = reporteDistribucion()
-        console.log(reporte)
-
-        let beneficiadoInforme = ''
-
-        for (const beneficiado of reporte[1]) {
-            beneficiadoInforme += `
-        -----------------------------
-        Beneficiado: ${beneficiado.nombre}
-        Dias faltantes: ${beneficiado.diasFaltantes}
-        Descuentos por adelantos: ${beneficiado.descuentosAdelantos}
-        Descuentos por dias faltantes: ${beneficiado.descuentosDiasFaltantes}
-        Total de descuentos: ${beneficiado.totalDescuentos}
-        Total a pagar: ${beneficiado.total}
-        -----------------------------
+    cardBeneficiado.id = `${id}`
+    cardBeneficiado.className = 'ficha-beneficiado'
+    cardBeneficiado.innerHTML = `
+        <div class="nombre">
+            <h4>${beneficiado.nombre}</h4>
+            <button class="eliminar" function="eliminar-beneficiado" id-beneficiado="${id}" >Eliminar</button>
+        </div>
+        <div class="adelantos">
+            <h3>Adelantos</h3>
+            <ul id="lista-adelantos-${id}">
+            ${beneficiado.adelantos.map(adelanto => {
+        return `<li>${adelanto.dia}: $${adelanto.monto}<button class="eliminar" function="eliminar-adelanto" id-beneficiado="${id}" dia="${adelanto.dia}">Eliminar</button></li>`
+    }).join('')}
+            </ul>
+            <div class="entradas">
+                <p>Agregar Adelantos</p>
+                ${selectorDias('adelantos')}
+                <input type="number" id="agregar-adelanto-monto${id}" placeholder="Monto" min = 1 required><br>
+                <button function="agregar-adelanto" id-beneficiado="${id}">+ Adelanto</button>
+            </div>
+        </div>
+            <div class="dias-faltantes" >
+            <h3>Dias Faltantes</h3>
+            <ul id="lista-dias-faltantes-${id}">
+            ${beneficiado.diasFaltantes.map(diaFaltante => {
+        return `<li>${diaFaltante}<button class="eliminar" function="eliminar-dia-faltante" id-beneficiado="${id}" dia="${diaFaltante}">Eliminar</button></li>`
+    }).join('')}
+            </ul>
+            <div class="entradas">
+                <p>Agregar dias Faltantes</p>
+                 ${selectorDias('dia-faltante')}
+                 <button function="agregar-dia-faltante" id-beneficiado="${id}">+ Dia</button>
+            </div>
+            </div>
+        </div>
         `
-        }
 
-        alert(`
-        REPORTE:
-        Total de propinas: ${reporte[0][0].totalPropinas}
-        Propina por dia: ${reporte[0][1].propinaPorDia}
-        Propina por beneficiado sin descuentos: ${reporte[0][2].propinaPorBeneficiadoSinDescuentos}
-
-        Beneficiados: ${beneficiadoInforme}
-        `)
-    }
-
-    //Menu
-    let continuar = true
-
-    //Opciones del menu 
-    const opciones = ' 1. Agregar beneficiado\n 2. Agregar propinas\n 3. Agregar adelantos\n 4. Agregar adelantos de terceros\n 5. Agregar dias faltantes\n 6. Generar reporte\n 7. Salir'
-
-    do {
-        switch (prompt(opciones)) {
-            case '1':
-                agregarBeneficiadoInterfaz()
-                break
-            case '2':
-                agregarPropinasInterfaz()
-                break
-            case '3':
-                agregarAdelantosInterfaz("Seleccina el numero del Beneficiado", adelantoBeneficiado)
-                break
-            case '4':
-                agregarAdelantosInterfaz("Ingresa el nombre del tercero", adelantoTercero)
-                break
-            case '5':
-                agregarDiasFaltantesInterfaz()
-                break
-            case '6':
-                generarReporte()
-                break
-            case '7':
-                continuar = false
-                break
-            default:
-                alert('Opcion no valida')
-                break
-        }
-
-    } while (continuar)
+    return cardBeneficiado
 }
+
+const listaBeneficiados = document.getElementById('lista-beneficiados')
+
+beneficiados.forEach(beneficiado => {
+    listaBeneficiados.appendChild(cardBeneficiado(beneficiado))
+})
+
+function cargarEventosFichaBeneficiado() {
+    const botones = document.querySelector(`#lista-beneficiados`).querySelectorAll('button')
+
+    botones.forEach(boton => {
+        let id = parseInt(boton.getAttribute('id-beneficiado'))
+
+        //Eliminar Beneficiado
+        if (boton.getAttribute('function') === 'eliminar-beneficiado') {
+            boton.onclick = () => {
+                eliminarBeneficiado(id)
+                boton.parentElement.parentElement.remove()
+            }
+        }
+
+        //Agregar Adelanto
+        if (boton.getAttribute('function') === 'agregar-adelanto') {
+            boton.onclick = () => {
+                let dia = boton.parentElement.querySelector('select').value
+                let monto = boton.parentElement.querySelector('input').value
+
+                monto = validar(parseInt(monto), boton.parentElement, 'Monto no valido!')
+                console.log(id, dia, monto)
+                if (dia && monto) {
+                    agregarAdelanto(id, dia, monto)
+                    boton.parentElement.parentElement.querySelector('ul').appendChild(item(null, `${dia}: $${monto}<button class="eliminar" function="eliminar-adelanto" id-beneficiado="${id}" dia="${dia}">Eliminar</button>`))
+
+                    cargarEventosFichaBeneficiado()
+                }
+            }
+        }
+
+        //Eliminar Adelanto
+        if (boton.getAttribute('function') === 'eliminar-adelanto') {
+            boton.onclick = () => {
+                console.log(id)
+                eliminarAdelanto(id, boton.getAttribute('dia'))
+                boton.parentElement.remove()
+            }
+        }
+
+        //Agregar Dia
+        if (boton.getAttribute('function') === 'agregar-dia-faltante') {
+            boton.onclick = () => {
+                let dia = boton.parentElement.querySelector('select').value
+                if (dia) {
+
+                    let agregado = agregarDiasFalatantes(id, dia)
+
+                    agregado = validar(agregado, boton.parentElement, 'Dia ya Agregado')
+
+                    if (agregado) {
+                        boton.parentElement.parentElement.querySelector('ul').appendChild(item(null, `${dia}<button class="eliminar" function="eliminar-dia-faltante" id-beneficiado="${id}" dia="${dia}">Eliminar</button>`))
+
+                        cargarEventosFichaBeneficiado()
+                    }
+
+                }
+            }
+        }
+
+        //Eliminar Dia Faltante
+        if (boton.getAttribute('function') === 'eliminar-dia-faltante') {
+            boton.onclick = () => {
+                eliminarDiaFaltante(id, boton.getAttribute('dia'))
+
+                boton.parentElement.remove()
+            }
+        }
+    })
+}
+
+cargarEventosFichaBeneficiado()
+
+// Agregar Beneficiado 
+const agregarBeneficiadoBtn = document.getElementById('agregar-beneficiado')
+agregarBeneficiadoBtn.onclick = () => {
+    let nombre = document.getElementById('input-beneficiado-nombre').value
+    nombre = nombre.trim()
+
+    nombre = validar(nombre, agregarBeneficiadoBtn.parentElement, 'Ingresar Nombre!')
+
+    if (nombre) {
+        agregarBeneficiado(nombre)
+        console.log(beneficiados, nombre)
+
+        listaBeneficiados.appendChild(cardBeneficiado(beneficiados[beneficiados.length - 1]))
+
+        cargarEventosFichaBeneficiado()
+    }
+}
+
+// Respaldar Beneficiados
+const respaldarBeneficiadosBtn = document.getElementById('respaldar-beneficiados')
+respaldarBeneficiadosBtn.onclick = () => {
+    setDatos('beneficiados', beneficiados)
+}
+
+//Borrar Propinas
+const borrarBeneficiadosBtn = document.getElementById('borrar-beneficiados')
+borrarBeneficiadosBtn.onclick = () => {
+    localStorage.removeItem('beneficiados')
+    document.getElementById('lista-beneficiados').innerHTML = ''
+}
+
+// ***Seccion Propinas***
+let propinas = getDatos('propinas', cargarPropinas) || []
+
+function listarPropinas(propinas) {
+    const propinasSection = document.createElement('section')
+    propinasSection.innerHTML = `
+<ul id="lista-propinas">
+    ${propinas.map(propina => {
+        return `
+        <li class="propina">
+        <h3>${propina.dia}</h3>
+        <p>$${propina.monto}</p>
+        <button id="${propina.dia}" class="eliminar">Eliminar</button>
+        </li>`
+    }).join('')}
+</ul>
+<div class="entradas">
+    ${selectorDias('dia', 'propina')}
+    <input type="number" id="input-propina-monto" min = 1 placeholder="Monto" required>
+    <button id="agregar-propina">Agregrar</button>
+    <br>
+    <button id="respaldar-propinas" class="respaldar">Respaldar</button>    
+    <button id="borrar-propinas" class="respaldar">Borrar Resplado</button>
+</div>
+
+`
+    return propinasSection
+}
+
+document.getElementById('propinas').appendChild(listarPropinas(propinas))
+
+function eventoEliminarPropina() {
+    const botones = document.querySelector('#lista-propinas').querySelectorAll('button')
+    botones.forEach(boton => {
+        boton.onclick = () => {
+            eliminarPropina(boton.id)
+            console.log(boton.id)
+            boton.parentElement.remove()
+        }
+    })
+}
+
+eventoEliminarPropina()
+// Agregar Propinas
+const agregarPropinaBtn = document.getElementById('agregar-propina')
+
+agregarPropinaBtn.onclick = () => {
+    let dia = document.getElementById('propina').value
+    let monto = document.getElementById('input-propina-monto').value
+
+
+    monto = validar(monto, agregarPropinaBtn.parentElement, 'Monto no valido!')
+
+    if (dia && monto) {
+        agregarPropinas(dia, parseInt(monto))
+        document.getElementById('lista-propinas').appendChild(itemPropina(null, `<h3>${dia}</h3>
+        <p>${monto}</p>
+        <button id="${dia}" class="eliminar">Eliminar</button>
+        </li>`))
+
+        eventoEliminarPropina()
+    }
+}
+
+//Respaldar Propinas
+const respaldarPropinaBtn = document.getElementById('respaldar-propinas')
+respaldarPropinaBtn.onclick = () => {
+    setDatos('propinas', propinas)
+}
+
+//Borrar Propinas
+const borrarPropinaBtn = document.getElementById('borrar-propinas')
+borrarPropinaBtn.onclick = () => {
+    localStorage.removeItem('propinas')
+    document.getElementById('lista-propinas').innerHTML = ''
+}
+
+//***Seccion Reporte***
+let reporte = localStorage.getItem('reporte') || []
+
+const seccionReporte = document.getElementById('reporte')
+seccionReporte.id = 'reporte'
+seccionReporte.innerHTML = `
+<h2>Reporte<h2/>
+<section id="lista-reportes"></section>
+<div class="entradas">
+    <button class="respaldar" id="generar-reporte">Generar Reporte</button>
+    <br>
+</div>`
+
+function cardReporte(beneficiado) {
+    let fichaBeneficiadoReporte = document.createElement('div')
+
+    fichaBeneficiadoReporte.className = 'ficha-beneficiado'
+    fichaBeneficiadoReporte.id = beneficiado.id
+
+    fichaBeneficiadoReporte.innerHTML = `
+            <h4>${beneficiado.nombre}</h4>
+            <p>Descuentos: ${beneficiado.totalDescuentos}</p>
+            <p>Total: <strong>${beneficiado.totalEntrega}</strong></p>
+            `
+
+    return fichaBeneficiadoReporte
+}
+
+//Mostrar Reporte
+function cardseccionReporte(reporte) {
+    reporte.estadisticaPropinas.forEach(estadistica => {
+        let p = document.createElement('p')
+        p.innerHTML = `Total Propinas: ${estadistica.totalRecibidas}`
+
+        document.getElementById('lista-reportes').appendChild(p)
+    })
+
+    reporte.resultados.forEach(beneficiado => {
+        document.getElementById('lista-reportes').appendChild(cardReporte(beneficiado))
+    })
+}
+
+seccionReporte.querySelector('button').onclick = () => {
+    document.getElementById('lista-reportes').innerHTML = ''
+
+    reporte = generarTotales(beneficiados, propinas)
+
+    cardseccionReporte(reporte)
+}
+
+render.appendChild(seccionReporte)
+
 /*
-
 // pruebas
-
 agregarBeneficiado('jose')
 agregarBeneficiado('David')
 agregarBeneficiado('Luis')
 agregarBeneficiado('Carlos')
+agregarBeneficiado('juan')
+agregarBeneficiado('Perro')
+agregarBeneficiado('')
+agregarBeneficiado(' ')
+agregarBeneficiado(6)
 
+eliminarBeneficiado(6)
+
+agregarAdelanto(1, 'viernes', 50)
+
+agregarDiasFalatantes(1, 'lunes')
+agregarDiasFalatantes(1, 'martes')
+
+
+agregarDiasFalatantes(2, 'martes')
+agregarDiasFalatantes(2, 'viernes')
+
+agregarDiasFalatantes(3, 'miercoles')
+agregarDiasFalatantes(3, 'viernes')
+
+agregarDiasFalatantes(4, 'miercoles')
+agregarDiasFalatantes(4, 'viernes')
+
+agregarDiasFalatantes(5, 'miercoles')
+agregarDiasFalatantes(5, 'viernes')
+
+agregarDiasFalatantes('5', 'miercols')
+agregarDiasFalatantes('h', 5)
+
+agregarPropinas('lunes', 400)
+agregarPropinas('martes', 600)
+agregarPropinas('miercoles', 300)
+agregarPropinas('jueves', 500)
+agregarPropinas('viernes', 400)
+
+agregarPropinas('vierne', '400')
+agregarPropinas('viernes', '400')
+
+console.log(propinas)
 console.log(beneficiados)
 
-console.log(obtenerBeneficiadoId(1))
-console.log(obtenerBeneficiadoId(2))
-console.log(obtenerBeneficiadoId(3))
-console.log(obtenerBeneficiadoId(10))
-
-agregarPropinas('domingo', 100)
-agregarPropinas('lunes', 100)
-agregarPropinas('martes', 100)
-agregarPropinas('miercoles', 100)
-agregarPropinas('jueves', 100)
-agregarPropinas('viernes', 100)
-agregarPropinas('sabado', 200)
-console.log('estadisticas', estadisticaPropinas())
-
-adelantoBeneficiado(1, 'domingo', 50)
-adelantoBeneficiado(2, 'domingo', 50)
-
-agregarDiasFalatantes(1, 2)
-agregarDiasFalatantes(3, 2)
-agregarDiasFalatantes(10, 2)
-
-calcularPropinaTotal()
-
-console.log(reporteDistribucion())
+console.log(generarTotales())
+console.log(generarTotales())
 */

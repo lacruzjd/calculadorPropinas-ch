@@ -1,0 +1,268 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    position: relative;
+    background-color: rgb(47, 46, 51);
+}
+
+header {
+    width: 100%;
+    position: fixed;
+    background-color: rgb(223, 126, 78);
+    z-index: 1;
+    height: 60px;
+}
+
+nav ul {
+    margin-top: 5px;
+     display: flex;
+    justify-content: center;
+
+}
+
+nav ul li a {
+    margin: 20px;
+    padding: 6px;
+    border-radius: 10px;
+    background-color: rgb(213, 211, 72);
+    color: rgb(251, 240, 240);
+    text-decoration: none;
+    font-weight: bolder;
+    color: black;
+
+
+}
+
+main {
+    margin: auto;
+    padding: 10px;
+    width: 90%;
+    border-radius: 10px;
+    position: relative;
+    top: 100px;
+
+    /* background-color: rgb(242, 242, 203); */
+}
+
+h1 {
+    font-size: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: rgb(208, 221, 243);
+    flex-basis: 100%;
+    font-size: 20px;
+}
+
+h3 {
+    flex-basis: 100%;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+h4 {
+    flex-basis: 100%;
+    font-size: 20px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+input,
+select {
+    margin: 4px 0;
+    padding: 3px;
+    border: none;
+    border-radius: 10px;
+    width: 80px;
+}
+
+#beneficiados,
+#propinas,
+#reporte {
+    color: aliceblue;
+    margin: 60px 0;
+    padding: 40px 0 0;
+    border-radius: 10px;
+    background-color: rgb(67, 77, 94);
+}
+
+#lista-beneficiados,
+#lista-propinas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.ficha-beneficiado,
+.propina {
+    margin: 10px;
+    padding: 4px;
+    border-radius: 10px;
+    background-color: rgb(134, 210, 236);
+    color: black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.propina{
+    width: 80px;
+}
+
+.propina p {
+    color: rgb(195, 67, 28);
+    font-weight: bolder;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.ficha-beneficiado .nombre {
+    flex-basis: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(119, 122, 143);
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
+    flex-basis: 100%;
+}
+
+.adelantos,
+.dias-faltantes {
+    padding: 4px;
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.eliminar {
+    padding: 3px;
+    border-radius: 10px;
+    background-color: rgb(252, 176, 176);
+    font-size: 12px;
+    border: none;
+}
+
+.eliminar:hover {
+    background-color: rgb(250, 117, 117);
+
+}
+
+.eliminar:active {
+    background-color: rgb(170, 117, 250);
+
+}
+
+.entradas {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(220, 131, 47);
+    text-align: center;
+}
+
+
+.entradas button,
+.entradas input,
+.entradas select,
+.entradas #agregar-propina {
+    padding: 3px;
+}
+
+.entradas button,
+.entradas #agregar-propina,
+.acciones button {
+    border: none;
+    border-radius: 10px;
+    padding: 3px;
+    background-color: rgb(188, 243, 116);
+}
+
+.entradas button:hover,
+.entradas #agregar-propina:hover,
+.acciones button:hover {
+    background-color: rgb(151, 245, 29);
+}
+
+.entradas button:active,
+.entradas #agregar-propina:active,
+.acciones button:active {
+    background-color: rgb(126, 148, 246);
+}
+
+#despliege-propinas ul {
+    display: flex;
+
+}
+
+#despliege-propinas li {
+    color: black;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    background-color: rgb(134, 210, 236);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.respaldar {
+    margin-top: 20px;
+    font-size: 16px;
+    background-color: rgb(127, 180, 255);
+}
+
+.respaldar:hover {
+    background-color: rgb(31, 124, 255);
+}
+
+
+#reporte .ficha-beneficiado strong {
+    color: rgb(173, 0, 0);
+    font-size: 20px;
+
+}
+
+#reporte .entradas {
+    margin-bottom: 20px;
+}
+
+#entregas{
+    margin-top: 20px;
+}
+
+.error {
+    margin: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    color: rgb(236, 90, 90);
+    background-color: whitesmoke;
+    font-size: 16px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #25262d;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+    padding: 5px;
+}
