@@ -376,9 +376,9 @@ let beneficiados = getDatos('beneficiados', cargarBeneficiados) || []
 
 const beneficiadosSection = document.getElementById('beneficiados')
 beneficiadosSection.innerHTML = `
-<h2>Beneficiados<h2/>
 <section id="lista-beneficiados"></section>
 <div class="entradas">
+<h2>Beneficiados<h2/>
     <input type="text" id="input-beneficiado-nombre" placeholder="Nombre" required>
     <button id="agregar-beneficiado">Agregrar</button>
     <br>
@@ -545,20 +545,11 @@ borrarBeneficiadosBtn.onclick = () => {
 // ***Seccion Propinas***
 let propinas = getDatos('propinas', cargarPropinas) || []
 
-function listarPropinas(propinas) {
-    const propinasSection = document.createElement('section')
-    propinasSection.innerHTML = `
-<ul id="lista-propinas">
-    ${propinas.map(propina => {
-        return `
-        <li class="propina">
-        <h3>${propina.dia}</h3>
-        <p>$${propina.monto}</p>
-        <button id="${propina.dia}" class="eliminar">Eliminar</button>
-        </li>`
-    }).join('')}
-</ul>
+const propinasSection = document.getElementById('propinas')
+propinasSection.innerHTML = `
+<div id="lista-propinas"></div>
 <div class="entradas">
+<h2>Propinas</h2>
     ${selectorDias('dia', 'propina')}
     <input type="number" id="input-propina-monto" min = 1 placeholder="Monto" required>
     <button id="agregar-propina">Agregrar</button>
@@ -568,10 +559,24 @@ function listarPropinas(propinas) {
 </div>
 
 `
-    return propinasSection
+
+function cardPropina(propina) {
+    let propinadiv = document.createElement('div')
+    propinadiv.className = 'propina'
+    propinadiv.innerHTML = `
+    <h3>${propina.dia}</h3>
+    <p>${propina.monto}</p>
+    <button id="${propina.dia}" class="eliminar">Eliminar</button>`
+
+    return propinadiv
 }
 
-document.getElementById('propinas').appendChild(listarPropinas(propinas))
+if (propinas) {
+    propinas.forEach(propina => {
+        console.log(propina)
+        document.getElementById('lista-propinas').appendChild(cardPropina(propina))
+    })
+}
 
 function eventoEliminarPropina() {
     const botones = document.querySelector('#lista-propinas').querySelectorAll('button')
@@ -585,9 +590,9 @@ function eventoEliminarPropina() {
 }
 
 eventoEliminarPropina()
+
 // Agregar Propinas
 const agregarPropinaBtn = document.getElementById('agregar-propina')
-
 agregarPropinaBtn.onclick = () => {
     let dia = document.getElementById('propina').value
     let monto = document.getElementById('input-propina-monto').value
@@ -625,10 +630,10 @@ let reporte = localStorage.getItem('reporte') || []
 const seccionReporte = document.getElementById('reporte')
 seccionReporte.id = 'reporte'
 seccionReporte.innerHTML = `
-<h2>Reporte<h2/>
 <section id="lista-reportes"></section>
 <div class="entradas">
-    <button class="respaldar" id="generar-reporte">Generar Reporte</button>
+<h2>Reporte<h2/>
+<button class="respaldar" id="generar-reporte">Generar Reporte</button>
     <br>
 </div>`
 

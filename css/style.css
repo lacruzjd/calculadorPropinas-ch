@@ -14,12 +14,12 @@ header {
     position: fixed;
     background-color: rgb(223, 126, 78);
     z-index: 1;
-    height: 60px;
+    height: 90px;
 }
 
 nav ul {
-    margin-top: 5px;
-     display: flex;
+    margin-top: 20px;
+    display: flex;
     justify-content: center;
 
 }
@@ -38,24 +38,29 @@ nav ul li a {
 }
 
 main {
+    width: 800px;
     margin: auto;
     padding: 10px;
-    width: 90%;
     border-radius: 10px;
     position: relative;
     top: 100px;
-
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-end;
     /* background-color: rgb(242, 242, 203); */
 }
 
 h1 {
     font-size: 20px;
     text-align: center;
+    color: rgb(241, 251, 234);
+    margin: 10px 20px;
 }
 
 h2 {
-    color: rgb(208, 221, 243);
-    flex-basis: 100%;
+    margin-bottom: 20px;
+    color: rgb(241, 251, 234);
     font-size: 20px;
 }
 
@@ -91,10 +96,24 @@ select {
 #propinas,
 #reporte {
     color: aliceblue;
-    margin: 60px 0;
+    margin: 30px 10px;
     padding: 40px 0 0;
     border-radius: 10px;
     background-color: rgb(67, 77, 94);
+}
+
+#beneficiados {
+    width: 800px;
+    ;
+}
+
+#propinas {
+    width: 350px;
+    ;
+}
+
+#reporte {
+    width: 400px;
 }
 
 #lista-beneficiados,
@@ -118,7 +137,11 @@ select {
     align-items: flex-start;
 }
 
-.propina{
+.ficha-beneficiado {
+    width: 230px;
+}
+
+.propina {
     width: 80px;
 }
 
@@ -223,8 +246,6 @@ select {
 
 .respaldar {
     margin-top: 20px;
-    font-size: 16px;
-    background-color: rgb(127, 180, 255);
 }
 
 .respaldar:hover {
@@ -238,11 +259,12 @@ select {
 
 }
 
-#reporte .entradas {
-    margin-bottom: 20px;
+#reporte .entradas button {
+    padding: 20px;
+    font-size: 20px;
 }
 
-#entregas{
+#entregas {
     margin-top: 20px;
 }
 
@@ -260,7 +282,7 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #25262d;
+    background-color: #4d4f60;
     color: white;
     text-align: center;
     font-size: 16px;
