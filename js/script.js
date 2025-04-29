@@ -466,6 +466,9 @@ function cargarEventosFichaBeneficiado() {
 
                     cargarEventosFichaBeneficiado()
                 }
+
+                boton.parentElement.querySelector('select').value = ''
+                boton.parentElement.querySelector('input').value = ''
             }
         }
 
@@ -493,6 +496,9 @@ function cargarEventosFichaBeneficiado() {
 
                         cargarEventosFichaBeneficiado()
                     }
+
+                    boton.parentElement.querySelector('select').value = ''
+
 
                 }
             }
@@ -539,6 +545,7 @@ respaldarBeneficiadosBtn.onclick = () => {
 const borrarBeneficiadosBtn = document.getElementById('borrar-beneficiados')
 borrarBeneficiadosBtn.onclick = () => {
     localStorage.removeItem('beneficiados')
+    beneficiados = []
     document.getElementById('lista-beneficiados').innerHTML = ''
 }
 
@@ -564,7 +571,7 @@ function cardPropina(propina) {
     propinadiv.className = 'propina'
     propinadiv.innerHTML = `
     <h3>${propina.dia}</h3>
-    <p>${propina.monto}</p>
+    <p>$${propina.monto}</p>
     <button id="${propina.dia}" class="eliminar">Eliminar</button>`
 
     return propinadiv
@@ -608,6 +615,8 @@ agregarPropinaBtn.onclick = () => {
 
         eventoEliminarPropina()
     }
+
+    document.getElementById('input-propina-monto').value = ''
 }
 
 //Respaldar Propinas
@@ -620,6 +629,7 @@ respaldarPropinaBtn.onclick = () => {
 const borrarPropinaBtn = document.getElementById('borrar-propinas')
 borrarPropinaBtn.onclick = () => {
     localStorage.removeItem('propinas')
+    propinas = []
     document.getElementById('lista-propinas').innerHTML = ''
 }
 
@@ -644,10 +654,9 @@ function cardReporte(beneficiado) {
 
     fichaBeneficiadoReporte.innerHTML = `
             <h4>${beneficiado.nombre}</h4>
-            <p>Descuentos: ${beneficiado.totalDescuentos}</p>
-            <p>Total: <strong>${beneficiado.totalEntrega}</strong></p>
+            <p>Descuentos: $${beneficiado.totalDescuentos}</p>
+            <p>Total: <strong>$${beneficiado.totalEntrega}</strong></p>
             `
-
     return fichaBeneficiadoReporte
 }
 
@@ -666,11 +675,17 @@ function cardseccionReporte(reporte) {
 }
 
 seccionReporte.querySelector('button').onclick = () => {
-    document.getElementById('lista-reportes').innerHTML = ''
+    console.log(propinas, beneficiados)
 
-    reporte = generarTotales(beneficiados, propinas)
+    if (beneficiados.length > 0 && propinas.length > 0) {
+        document.getElementById('lista-reportes').innerHTML = ''
+        reporte = generarTotales(beneficiados, propinas)
 
-    cardseccionReporte(reporte)
+        cardseccionReporte(reporte)
+    } else {
+        document.getElementById('lista-reportes').innerHTML = ''
+
+    }
 }
 
 render.appendChild(seccionReporte)
