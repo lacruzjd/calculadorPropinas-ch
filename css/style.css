@@ -205,6 +205,7 @@ select {
 .entradas select,
 .entradas #agregar-propina {
     padding: 3px;
+cursor: pointer;
 }
 
 .entradas button,
@@ -214,6 +215,7 @@ select {
     border-radius: 10px;
     padding: 3px;
     background-color: rgb(188, 243, 116);
+cursor: pointer
 }
 
 .entradas button:hover,
@@ -246,6 +248,7 @@ select {
 
 .respaldar {
     margin-top: 20px;
+cursor: pointer;
 }
 
 .respaldar:hover {
@@ -262,6 +265,7 @@ select {
 #reporte .entradas button {
     padding: 20px;
     font-size: 20px;
+cursor: pointer;
 }
 
 #entregas {
