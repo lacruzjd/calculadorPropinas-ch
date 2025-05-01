@@ -19,7 +19,7 @@ class Beneficiado {
     }
 
     setAdelanto(dia, monto) {
-        if (typeof dia === 'string' && dia.trim() !== '' && typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
+        if (typeof dia === 'string' && dia.trim() !== '' && typeof monto === 'number' && monto > 0 && Propina.semana.includes(dia)) {
 
             if (!this.adelantos.some(adelanto => adelanto.dia === dia)) {
                 this.adelantos.push({ dia, monto })
@@ -56,7 +56,7 @@ class Propina {
     }
 
     setPropina(dia, monto) {
-        if (typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
+        if (typeof monto === 'number' && monto > 0 && Propina.semana.includes(dia)) {
             this.dia = dia
             this.monto = monto
         } else {
