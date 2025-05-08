@@ -6,13 +6,13 @@
 
 body {
     position: relative;
-    background-color: rgb(47, 46, 51);
+    background-color: rgb(17, 24, 48);
 }
 
 header {
     width: 100%;
     position: fixed;
-    background-color: rgb(223, 126, 78);
+    background-color: rgb(31, 80, 67);
     z-index: 1;
     height: 90px;
 }
@@ -28,7 +28,7 @@ nav ul li a {
     margin: 20px;
     padding: 6px;
     border-radius: 10px;
-    background-color: rgb(213, 211, 72);
+    background-color: rgb(131, 223, 95);
     color: rgb(251, 240, 240);
     text-decoration: none;
     font-weight: bolder;
@@ -40,7 +40,7 @@ nav ul li a {
 main {
     width: 800px;
     margin: auto;
-    padding: 10px;
+    padding: 40px 0;
     border-radius: 10px;
     position: relative;
     top: 100px;
@@ -59,7 +59,6 @@ h1 {
 }
 
 h2 {
-    margin-bottom: 20px;
     color: rgb(241, 251, 234);
     font-size: 20px;
 }
@@ -70,7 +69,9 @@ h3 {
     margin-bottom: 10px;
 }
 
-h4 {
+h4,
+#reporte p {
+    
     flex-basis: 100%;
     font-size: 20px;
 }
@@ -96,31 +97,46 @@ select {
 #propinas,
 #reporte {
     color: aliceblue;
-    margin: 30px 10px;
-    padding: 40px 0 0;
+    margin: 10px;
     border-radius: 10px;
-    background-color: rgb(67, 77, 94);
+    background-color: rgb(68, 107, 98);
 }
 
 #beneficiados {
-    width: 800px;
+    width: 550px;
     ;
 }
 
 #propinas {
-    width: 350px;
+    width: 200px;
     ;
 }
 
 #reporte {
-    width: 400px;
+    width: 800px;
+}
+
+#reporte p {
+    padding: 10px;
+    color: black;
+    
 }
 
 #lista-beneficiados,
-#lista-propinas {
+#lista-propinas,
+#lista-reportes {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.ficha-beneficiado .nombre {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(100, 137, 112);
+    color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-between;
 }
 
 .ficha-beneficiado,
@@ -128,40 +144,43 @@ select {
     margin: 10px;
     padding: 4px;
     border-radius: 10px;
-    background-color: rgb(134, 210, 236);
+    background-color: rgb(206, 212, 215);
     color: black;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: flex-start;
-}
-
-.ficha-beneficiado {
-    width: 230px;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .propina {
     width: 80px;
 }
 
-.propina p {
+.listas {
+    display: flex;
+    flex-direction: row;
+}
+
+.listas > div {
+    background-color: rgb(227, 227, 227);
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+
+}
+.propina strong {
     color: rgb(195, 67, 28);
     font-weight: bolder;
     font-size: 20px;
     margin-bottom: 10px;
 }
-
-.ficha-beneficiado .nombre {
-    flex-basis: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgb(119, 122, 143);
-    color: rgb(255, 255, 255);
-    display: flex;
-    justify-content: space-between;
-    flex-basis: 100%;
+.propina button {
+    width: 23px;
+    height: 23px;
+    font-size: 16px;
+    position: relative;
+    left: 45px;
 }
+
 
 .adelantos,
 .dias-faltantes {
@@ -174,10 +193,11 @@ select {
 }
 
 .eliminar {
-    padding: 3px;
-    border-radius: 10px;
-    background-color: rgb(252, 176, 176);
-    font-size: 12px;
+    margin-left: 10px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: rgb(255, 135, 135);
     border: none;
 }
 
@@ -192,10 +212,10 @@ select {
 }
 
 .entradas {
-    margin-top: 10px;
-    padding: 10px;
+    margin: 30px 0 0;
+    padding: 4px;
     border-radius: 10px;
-    background-color: rgb(220, 131, 47);
+    background-color: rgb(132, 135, 136);
     text-align: center;
 }
 
@@ -204,6 +224,7 @@ select {
 .entradas input,
 .entradas select,
 .entradas #agregar-propina {
+    font-size: 12px;
     padding: 3px;
 }
 
@@ -253,9 +274,16 @@ select {
 }
 
 
+#reporte .ficha-beneficiado  {
+    display: inline-block;
+}
+
+#reporte .ficha-beneficiado label input {
+    font-size: 14px;
+}
 #reporte .ficha-beneficiado strong {
     color: rgb(173, 0, 0);
-    font-size: 20px;
+    font-size: 22px;
 
 }
 
@@ -287,4 +315,32 @@ footer {
     text-align: center;
     font-size: 16px;
     padding: 5px;
+}
+
+.entregada {
+    background-color: rgb(201, 249, 155);
+}
+
+@media screen and (max-width: 600px) {
+
+    * {
+        font-size: 12px;
+    }
+
+    #app{
+        margin-top: 0;
+        padding: 0;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        top: 70px
+    }
+
+   header {
+       height: 50px;
+    }
+
+    nav {
+        display: none;
+    }
 }
