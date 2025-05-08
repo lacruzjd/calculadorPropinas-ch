@@ -326,6 +326,16 @@ function item(text) {
     return li
 }
 
+
+function error(mensaje) {
+    let errorCard = document.createElement('div')
+    errorCard.className = 'error'
+    errorCard.innerHTML = `
+    <p><strong>${mensaje}</strong></p>
+    `
+    return errorCard
+}
+
 function seccionBeneficiado(beneficiado) {
     console.log(beneficiado)
     let {id, nombre, adelantos, diasFaltantes} = beneficiado
@@ -376,7 +386,8 @@ secciones.forEach(seccion => {
 
             let nombre = agregarBeneficiadoBtn.parentElement.querySelector('input').value 
 
-            console.log(nombre)
+            nombre = validar(nombre, nombre.trim() === '', seccion, 'Nombre no Valido')
+            console.log(nombre )
 
         }
     }
