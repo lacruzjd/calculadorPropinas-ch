@@ -82,6 +82,7 @@ class CalculadorTotal {
         }
     }
 
+
     //Asigna el monto de las propinas diarias a los asistentes
     setPropinasDiarias() {
         this.beneficiados.forEach(beneficiado => {
@@ -117,7 +118,7 @@ class CalculadorTotal {
 
     //Establecer el monto a entregar
     setTotal() {
-        beneficiados.forEach(beneficiado => {
+        this.beneficiados.forEach(beneficiado => {
             beneficiado.total = beneficiado.propinasEntregadasPorDia.reduce((acc, dia) => acc + dia.monto, 0)
             if (beneficiado.totalDescuentos > 0) {
                 beneficiado.totalEntrega = beneficiado.total - beneficiado.totalDescuentos
@@ -141,15 +142,14 @@ class CalculadorTotal {
             }]
         }
     }
-
 }
 
 // Agregar beneficiado
-function agregarBeneficiado(nombre) {
+function agregarBeneficiado(nombre, lista) {
     if (typeof nombre === 'string' && nombre.trim() !== '') {
         const beneficiado = new Beneficiado()
         beneficiado.setNombre(nombre)
-        beneficiados.push(beneficiado)
+        lista.push(beneficiado)
         return true
     } else {
         return false
@@ -157,8 +157,8 @@ function agregarBeneficiado(nombre) {
 }
 
 // Obtener beneficiado por id
-function obtenerBeneficiadoId(idBeneficiado) {
-    let beneficiado = beneficiados.find(beneficiado => beneficiado.id === idBeneficiado)
+function obtenerBeneficiadoId(idBeneficiado, lista) {
+    let beneficiado = lista.find(beneficiado => beneficiado.id === idBeneficiado)
     if (beneficiado) {
         return beneficiado
     } else {
@@ -167,18 +167,17 @@ function obtenerBeneficiadoId(idBeneficiado) {
 }
 
 // Eliminar beneficiado 
-function eliminarBeneficiado(id) {
-    let beneficiado = obtenerBeneficiadoId(id)
+function eliminarBeneficiado(id, lista) {
+    let beneficiado = obtenerBeneficiadoId(id, lista)
 
     if (beneficiado) {
-        beneficiados = beneficiados.filter(beneficiado => beneficiado.id !== id)
-        return true
+        return lista = lista.filter(beneficiado => beneficiado.id !== id)
     }
 }
 
 // Agregar adelantos
-function agregarAdelanto(id, dia, monto) {
-    let beneficiado = obtenerBeneficiadoId(id)
+function agregarAdelanto(id, dia, monto, lista) {
+    let beneficiado = obtenerBeneficiadoId(id, lista)
 
     if (beneficiado !== null && typeof dia === 'string' && typeof monto === 'number') {
         beneficiado.setAdelanto(dia, monto)
@@ -187,20 +186,17 @@ function agregarAdelanto(id, dia, monto) {
 }
 
 //Eliminar Adelanto
-function eliminarAdelanto(id, dia) {
-    let beneficiado = obtenerBeneficiadoId(id)
-    console.log(beneficiado, dia)
-
+function eliminarAdelanto(id, dia, lista) {
+    let beneficiado = obtenerBeneficiadoId(id, lista)
     if (beneficiado !== null && typeof dia === 'string' && dia.trim() !== '') {
         beneficiado.adelantos = beneficiado.adelantos.filter(adelanto => adelanto.dia !== dia)
-
         return true
     }
 }
 
 // Agregar dias faltantes
-function agregarDiasFalatantes(id, dia) {
-    let beneficiado = obtenerBeneficiadoId(id)
+function agregarDiasFalatantes(id, dia, lista) {
+    let beneficiado = obtenerBeneficiadoId(id, lista)
 
     if (beneficiado !== null && !beneficiado.diasFaltantes.includes(dia)) {
         beneficiado.setDiaFaltante(dia)
@@ -209,8 +205,8 @@ function agregarDiasFalatantes(id, dia) {
 }
 
 //Eliminar Dias Faltantes 
-function eliminarDiaFaltante(id, dia) {
-    let beneficado = obtenerBeneficiadoId(id)
+function eliminarDiaFaltante(id, dia, lista) {
+    let beneficado = obtenerBeneficiadoId(id, lista)
 
     if (beneficado) {
         beneficado.diasFaltantes = beneficado.diasFaltantes.filter(diaFaltante => diaFaltante !== dia)
@@ -219,15 +215,13 @@ function eliminarDiaFaltante(id, dia) {
 }
 
 //Agregar propina
-function agregarPropinas(diaSemana, monto) {
+function agregarPropinas(diaSemana, monto, lista) {
     if (typeof diaSemana === 'string' && diaSemana.trim() !== '' && typeof monto === 'number') {
         if (Propina.semana.includes(diaSemana.trim().toLowerCase())) {
             let propina = new Propina()
-
             propina.setPropina(diaSemana, monto)
-            propinas.push(propina)
-
-            return true
+            lista.push(propina)
+            return lista
         }
     } else {
         return false
@@ -235,12 +229,10 @@ function agregarPropinas(diaSemana, monto) {
 }
 
 //Eliminar Propina
-function eliminarPropina(dia) {
+function eliminarPropina(dia, lista) {
     if (typeof dia === 'string' && dia.trim() !== '') {
-        propinas = propinas.filter(propina => propina.dia !== dia)
-        return true
+        return lista = lista.filter(propina => propina.dia !== dia)
     }
-
     return false
 }
 
@@ -298,7 +290,6 @@ function procesarPropinas(data) {
 
 // INTERFAZ
 //Componente selector de dias 
-
 function seccionTemplate(titulo) {
     const seccion = document.createElement('seccion')
     seccion.innerHTML = `
@@ -319,10 +310,14 @@ function seccionInput(id, className, inputs) {
     return seccion
 }
 
-function item(text) {
+function item(text, accionesBoton) {
     let li = document.createElement('li')
     li.innerHTML = text
 
+    li.querySelector('button').onclick = () => {
+        accionesBoton.forEach(accion => accion())
+        li.remove()
+    }
     return li
 }
 
@@ -336,64 +331,246 @@ function error(mensaje) {
     return errorCard
 }
 
-function seccionBeneficiado(beneficiado) {
-    console.log(beneficiado)
-    let {id, nombre, adelantos, diasFaltantes} = beneficiado
-    let seccion = document.createElement('section')
-    seccion.id = id
-    seccion.className = 'ficha-beneficiado'
+// Validar 
+function validar(dato, validacion, nodoRender, mensaje) {
+    if (validacion) {
+        let errorMensaje = nodoRender.querySelector('.error')
 
-    seccion.innerHTML = `
-    <h3>${nombre}</h3>
-    <button>x</button>
-    <ul class="adelantos"></ul>
-    <ul class="dias-faltantes"></ul>
-    `
-    adelantos.forEach(adelanto => {
-        seccion.querySelector('.adelantos').appendChild(item(`${adelanto.dia}: ${adelanto.monto}`))
-    })
+        if (errorMensaje) errorMensaje.remove()
+        nodoRender.appendChild(error(mensaje))
 
-    diasFaltantes.forEach(dia => {
-        seccion.querySelector('.dias-faltantes').appendChild(item(`${dia}`))
-    })
+        return null
 
-    return seccion
+    } else {
+        let errorMensaje = nodoRender.querySelector('.error')
+
+        if (errorMensaje) errorMensaje.remove()
+
+        return dato
+    }
 }
 
-let secciones = document.querySelectorAll('section')
+//obtener beneficiados
+let beneficados = getDatos('beneficiados', procesarBeneficiados) || []
 
+//Obtener propinas
+let propinas = getDatos('propinas', procesarPropinas) || []
+
+
+let secciones = document.querySelectorAll('section')
 secciones.forEach(seccion => {
     seccion.appendChild(seccionTemplate(seccion.id.charAt(0).toUpperCase() + seccion.id.slice(1)
     ))
 
+    //Seccion Beneficiados
     if (seccion.id === 'beneficiados') {
 
-        const beneficados = getDatos('beneficiados', procesarBeneficiados) || []
+        function respaldar() {
+            setDatos('beneficiados', beneficados)
+        }
 
+        function seccionBeneficiado(beneficiado) {
+            let { id, nombre, adelantos, diasFaltantes } = beneficiado
+            let seccion = document.createElement('section')
+
+            seccion.id = id
+            seccion.className = 'ficha-beneficiado'
+            seccion.innerHTML = `
+            <h3>${nombre}</h3>
+            <button class="eliminar-beneficiado">x</button>
+            <ul class="adelantos">
+                <h4>Adelantos</h4>
+                <ul></ul>
+                <div class="entradas">
+                <input type="text" placeholder="Dia" class="dia"></input>
+                <input type="number" placeholder="Monto" class="monto"></input>
+                    <button>Agregar</button>
+                </div>
+            </ul>
+            <ul class="dias-faltantes">
+                <h4>Faltas</h4>
+                <ul></ul>
+                <div class="entradas">
+                    <input type="text" placeholder="Dia"></input>
+                    <button>Agregar</button>
+                </div>
+            </ul>
+            `
+
+            let adelantoItems = seccion.querySelector('.adelantos')
+
+            //agregar adelantos
+
+            // Listar adelantos
+            adelantos.forEach(adelanto => {
+                adelantoItems.querySelector('ul').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
+            })
+
+            function itemAdelanto(dia, monto) {
+                let itemAdelanto = item(`${dia}: ${monto}<button>x</button>`, [
+                    () => eliminarAdelanto(id, dia, beneficados),
+                    () => respaldar()
+                ])
+
+                respaldar()
+                return itemAdelanto
+            }
+
+            adelantoItems.querySelector('.entradas').querySelector('button').onclick = () => {
+                let dia = adelantoItems.querySelector('.dia').value
+                let monto = parseInt(adelantoItems.querySelector('.monto').value)
+
+                dia = validar(dia, dia.trim() === '', adelantoItems, 'Dia no Valido')
+                monto = validar(monto, monto < 0 || monto === NaN, adelantoItems, 'Monto no Valido')
+
+                if (dia && monto) {
+                    agregarAdelanto(id, dia, monto, beneficados)
+                    adelantoItems.querySelector('ul').appendChild(itemAdelanto(dia, monto))
+                }
+            }
+
+            //agregar dias faltantes
+            function itemDiaFaltante(dia) {
+                let itemDia = item(`${dia} <button>x</button>`, [
+                    () => eliminarDiaFaltante(id, dia, beneficados),
+                    () => respaldar()
+                ])
+
+                respaldar()
+                return itemDia
+            }
+
+            let diaItems = seccion.querySelector('.dias-faltantes')
+
+            diasFaltantes.forEach(dia => {
+                diaItems.querySelector('ul').appendChild(itemDiaFaltante(dia))
+            })
+
+            diaItems.querySelector('.entradas').querySelector('button').onclick = () => {
+                let dia = diaItems.querySelector('input').value
+
+                dia = validar(dia, dia.trim() === '', diaItems, 'Dia no Valido')
+
+                if (dia) {
+                    if (agregarDiasFalatantes(id, dia, beneficados)) {
+                        diaItems.querySelector('ul').appendChild(itemDiaFaltante(dia))
+                    }
+                }
+            }
+
+            //Eliminar Beneficiado
+            seccion.querySelector('.eliminar-beneficiado').onclick = () => {
+                beneficados = eliminarBeneficiado(id, beneficados)
+                seccion.remove()
+                respaldar()
+            }
+
+            return seccion
+        }
+
+        //Listar Beneficiados
         beneficados.forEach(beneficiado => {
             seccion.querySelector('.lista').appendChild(seccionBeneficiado(beneficiado))
         })
-        
+
+        //Agregar Beneficado 
         seccion.querySelector('.inputs').appendChild(seccionInput(null, 'entradas', `
             <input type="text"></input>
             <button>Agregar</button>
         `))
 
         let agregarBeneficiadoBtn = seccion.querySelector('.inputs button')
-
-        console.log(seccion)
         agregarBeneficiadoBtn.onclick = () => {
 
-            let nombre = agregarBeneficiadoBtn.parentElement.querySelector('input').value 
+            let nombre = agregarBeneficiadoBtn.parentElement.querySelector('input').value
 
             nombre = validar(nombre, nombre.trim() === '', seccion, 'Nombre no Valido')
-            console.log(nombre )
 
+            if (nombre) {
+                agregarBeneficiado(nombre, beneficados)
+                seccion.querySelector('.lista').appendChild(seccionBeneficiado(beneficados[beneficados.length - 1]))
+                respaldar()
+            }
         }
+
     }
 
+    if (seccion.id === 'propinas') {
+
+        function itemPropina(dia, monto) {
+            let itemPropina = item(`${dia}: $ ${monto} <button>x</buton>`, [
+                () => propinas = eliminarPropina(dia, propinas),
+                () => setDatos('propinas', propinas)
+            ])
+
+            setDatos('propinas', propinas)
+            return itemPropina
+        }
+
+        //listar propinas
+        propinas.forEach(propina => {
+            seccion.querySelector('.lista').appendChild(itemPropina(propina.dia, propina.monto))
+        })
+
+        //Agregar propinas 
+        seccion.querySelector('.inputs').appendChild(seccionInput(null, 'entradas', `
+            <input type="text" ></input>
+            <input type="number" placeholder="Monto"></input>
+            <button>Agregar</button>
+        `))
+
+        seccion.querySelector('.entradas').querySelector('button').onclick = () => {
+
+            let dia = seccion.querySelector('input[type="text"]').value
+            let monto = parseInt(seccion.querySelector('input[type="number"]').value)
+
+            dia = validar(dia, dia.trim() === '', seccion.querySelector('.entradas'), 'Ingresa un dia valido')
+            monto = validar(monto, monto < 0 || monto === NaN, seccion.querySelector('.entradas'), 'Ingresa un monto valido')
+
+            if (dia && monto) {
+                if (agregarPropinas(dia, monto, propinas)) {
+                    seccion.querySelector('.lista').appendChild(itemPropina(dia, monto))
+                }
+            }
+        }
+
+    }
+
+    if (seccion.id === 'reporte') {
+        let reporte = JSON.parse(localStorage.getItem('reporte')) || []
+
+        function itemTotal(item) {
+            let div = document.createElement('div')
+            div.className = 'ficha-beneficiado'
+
+            div.innerHTML = `
+                <h3>${item.nombre}</h3>
+                <p>Descuentos: ${item.totalDescuentos}</p>
+                <p>Total: ${item.totalEntrega}</p>
+                `
+            return div
+        }
+
+        //Listar Reporte Guardado
+        reporte.resultados.forEach(item => {
+            seccion.querySelector('.lista').appendChild(itemTotal(item))
+        })
+
+
+        //Generar Reporte
+        seccion.querySelector('.inputs').appendChild(seccionInput(null, 'entradas', `<button>Generar Reporte</button>`))
+
+        seccion.querySelector('.entradas').querySelector('button').onclick = () => {
+            reporte = generarTotales(beneficados, propinas)
+            localStorage.setItem('reporte', JSON.stringify(reporte))
+
+            let items = seccion.querySelector('.lista').querySelectorAll('div')
+            items.forEach(item => item.remove())
+
+            console.log(reporte)
+            reporte.resultados.forEach(item => {
+                seccion.querySelector('.lista').appendChild(itemTotal(item))
+            })
+        }
+    }
 })
-
-
-
-
