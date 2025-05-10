@@ -96,17 +96,21 @@ strong {
     background-color: rgb(27, 104, 77);
 }
 
-input,
-button,
-select {
-    padding: 6px;
-    border: none;
-    border-radius: 10px;
+
+.entradas button,
+.entradas input,
+.entradas select,
+.entradas #agregar-propina {
+    padding: 3px;
 }
 
-.ficha-beneficiado {
-    margin: 10px;
+.entradas button,
+.entradas #agregar-propina,
+.acciones button {
+    border: none;
     border-radius: 10px;
+    padding: 3px;
+    background-color: rgb(188, 243, 116);
 }
 
 .ficha-beneficiado input,
@@ -126,26 +130,24 @@ select {
     align-items: center;
 }
 
-img {
-    border-radius: 50%;
+.respaldar {
+    margin-top: 20px;
 }
 
-.adelantos,
-.dias-faltantes,
-.resultados {
-    border-radius: 10px;
-    background-color: antiquewhite;
+.respaldar:hover {
+    background-color: rgb(31, 124, 255);
+}
+
+
+#reporte .ficha-beneficiado strong {
+    color: rgb(173, 0, 0);
+    font-size: 20px;
 
 }
 
-.lista-dias-faltantes div,
-.lista-adelantos div {
-    border-radius: 3px;
-    padding: 4px;
-    background-color: aliceblue;
-    margin: 4px 0;
-    display: flex;
-    justify-content: space-between;
+#reporte .entradas button {
+    padding: 20px;
+    font-size: 20px;
 }
 
 .adelantos .entradas,
