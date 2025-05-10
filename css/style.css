@@ -4,6 +4,15 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+    background-color: black;
+}
+
+#app {
+    margin: auto;
+    max-width: 800px;
+}
+
 h4 {
     padding: 10px;
 }
@@ -27,7 +36,7 @@ ul {
     flex-wrap: wrap;
 }
 
-#propinas .lista div{
+#propinas .lista div {
     width: 4rem;
     margin: 10px;
     padding: 10px;
@@ -59,11 +68,11 @@ strong {
 }
 
 input,
-button {
+button,
+select {
     padding: 6px;
     border: none;
     border-radius: 10px;
-    width: 4rem;
 }
 
 .ficha-beneficiado {
@@ -71,10 +80,18 @@ button {
     border-radius: 10px;
 }
 
+.ficha-beneficiado  input,
+.ficha-beneficiado  select,
+.ficha-beneficiado .adelantos button,
+.ficha-beneficiado .dias-faltantes button {
+    width: 4rem;
+    font-size: 0.7rem;
+}
+
 .header {
     border-radius: 10px;
     padding: 10px;
-    background-color: rgb(212, 212, 49);
+    background-color: rgb(233, 233, 147);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -85,7 +102,7 @@ img {
 }
 
 .adelantos,
-.dias-faltantes, 
+.dias-faltantes,
 .resultados {
     border-radius: 10px;
     background-color: antiquewhite;
@@ -108,12 +125,6 @@ img {
     border-radius: 10px;
     padding: 3px;
     background-color: rgb(132, 191, 191);
-
-}
-
-.ficha-beneficiado input,
-.ficha-beneficiado button {
-    font-size: 12px;
 
 }
 
