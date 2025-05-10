@@ -9,9 +9,17 @@ body {
 }
 
 #app {
-    margin: auto;
+    margin: 60px auto;
     max-width: 800px;
 }
+
+h1 {
+    font-size: 1rem;
+}
+
+h2 {
+
+font-size: 1.5rem;}
 
 h4 {
     padding: 10px;
@@ -22,10 +30,31 @@ ul {
     margin: 10px 0;
 }
 
+header {
+    background: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav  ul{
+    margin: 0 20px 0;
+    list-style: none;
+    display: flex;
+}
+nav  ul li{
+    margin: 10px;
+}
 
 #propinas,
 #beneficiados,
-#reporte {
+#resultados {
     background-color: rgb(182, 202, 218);
     margin: 10px;
     border-radius: 10px;
@@ -80,8 +109,8 @@ select {
     border-radius: 10px;
 }
 
-.ficha-beneficiado  input,
-.ficha-beneficiado  select,
+.ficha-beneficiado input,
+.ficha-beneficiado select,
 .ficha-beneficiado .adelantos button,
 .ficha-beneficiado .dias-faltantes button {
     width: 4rem;
@@ -131,3 +160,12 @@ img {
 .resultados {
     padding: 10px;
 }
+
+footer {
+    background: #333;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;

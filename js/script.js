@@ -289,8 +289,9 @@ function procesarPropinas(data) {
     })
 }
 
+
 // INTERFAZ
-//Componente selector de dias 
+
 function seccionTemplate(titulo) {
     const seccion = document.createElement('seccion')
     seccion.innerHTML = `
@@ -436,6 +437,16 @@ function item(text, accionesBoton) {
         li.remove()
     }
     return li
+}
+
+function itemPropina(dia, monto) {
+    let itemPropina = item(`<p>${dia} <strong>$${monto}</strong></p> <button class="eliminar">x</buton>`, [
+        () => propinas = eliminarPropina(dia, propinas),
+        () => setDatos('propinas', propinas)
+    ])
+
+    setDatos('propinas', propinas)
+    return itemPropina
 }
 
 function error(mensaje) {
@@ -596,7 +607,7 @@ secciones.forEach(seccion => {
 
     if (seccion.id === 'resultados') {
         console.log(resultados)
-        if (resultados.resultados.length > 0) {
+        if (resultados.length > 0) {
             resultados.resultados.forEach(item => {
                 seccion.querySelector('.lista').appendChild(itemTotal(item))
             })
@@ -618,17 +629,16 @@ document.querySelector('#nueva-semana').onclick = () => {
 
 }
 
-
-
 document.querySelector('#generar-reporte').onclick = () => {
-    console.log('reporte')
-    reporte = generarTotales(beneficiados, propinas)
-    localStorage.setItem('resultados', JSON.stringify(reporte))
+    resultados = generarTotales(beneficiados, propinas)
+
+    console.log('guardar reporer')
+    localStorage.setItem('resultados', JSON.stringify(resultados))
 
     let items = document.querySelector('#resultados').querySelector('.lista').querySelectorAll('div')
     items.forEach(item => item.remove())
 
-    reporte.resultados.forEach(item => {
+    resultados.resultados.forEach(item => {
         document.querySelector('#resultados').querySelector('.lista').appendChild(itemTotal(item))
     })
 }
