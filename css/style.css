@@ -4,343 +4,119 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-    position: relative;
-    background-color: rgb(17, 24, 48);
+h4 {
+    padding: 10px;
 }
 
-header {
-    width: 100%;
-    position: fixed;
-    background-color: rgb(31, 80, 67);
-    z-index: 1;
-    height: 90px;
-}
-
-nav ul {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-
-}
-
-nav ul li a {
-    margin: 20px;
-    padding: 6px;
-    border-radius: 10px;
-    background-color: rgb(131, 223, 95);
-    color: rgb(251, 240, 240);
-    text-decoration: none;
-    font-weight: bolder;
-    color: black;
-
-
-}
-
-main {
-    width: 800px;
-    margin: auto;
-    padding: 40px;
-    border-radius: 10px;
-    position: relative;
-    top: 100px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    /* background-color: rgb(242, 242, 203); */
-}
-
-h1 {
-    font-size: 20px;
-    text-align: center;
-    color: rgb(241, 251, 234);
-    margin: 10px 20px;
-}
-
-h2 {
-    color: rgb(241, 251, 234);
-    font-size: 20px;
-}
-
-h3 {
-    flex-basis: 100%;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-h4,
-#reporte p {
-    
-    flex-basis: 100%;
-    font-size: 20px;
-}
 
 ul {
-    list-style: none;
+    margin: 10px 0;
 }
 
-li {
-    margin-bottom: 10px;
-}
 
-input,
-select {
-    margin: 4px 0;
-    padding: 3px;
-    border: none;
-    border-radius: 10px;
-    width: 80px;
-}
-
-#beneficiados,
 #propinas,
+#beneficiados,
 #reporte {
-    color: aliceblue;
+    background-color: rgb(182, 202, 218);
     margin: 10px;
     border-radius: 10px;
-    background-color: rgb(68, 107, 98);
 }
 
-#beneficiados {
-    width: 550px;
-    ;
-}
-
-#propinas {
-    width: 200px;
-    ;
-}
-
-#reporte {
-    width: 800px;
-}
-
-#reporte p {
-    padding: 10px;
-    color: black;
-    
-}
-
-#lista-beneficiados,
-#lista-propinas,
-#lista-reportes {
+.lista {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
 }
 
-.ficha-beneficiado .nombre {
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgb(100, 137, 112);
-    color: rgb(255, 255, 255);
-    display: flex;
-    justify-content: space-between;
-}
-
-.ficha-beneficiado,
-.propina {
+#propinas .lista div{
+    width: 4rem;
     margin: 10px;
-    padding: 4px;
+    padding: 10px;
+    background-color: rgb(220, 229, 229);
     border-radius: 10px;
-    background-color: rgb(206, 212, 215);
-    color: black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    text-align: center;
 }
 
-.propina {
-    width: 80px;
-}
+strong {
+    font-size: 1.3rem;
+    display: block;
+    color: brown;
 
-.listas {
-    display: flex;
-    flex-direction: row;
-}
-
-.listas > div {
-    background-color: rgb(227, 227, 227);
-    margin: 5px;
-    padding: 5px;
-    border-radius: 5px;
-
-}
-.propina strong {
-    color: rgb(195, 67, 28);
-    font-weight: bolder;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-.propina button {
-    width: 23px;
-    height: 23px;
-    font-size: 16px;
-    position: relative;
-    left: 45px;
-}
-
-
-.adelantos,
-.dias-faltantes {
-    padding: 4px;
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    font-size: 12px;
 }
 
 .eliminar {
-    margin-left: 10px;
-    width: 15px;
-    height: 15px;
+    padding: 0;
     border-radius: 50%;
-    background-color: rgb(255, 135, 135);
+    width: 1rem;
+    height: 1rem;
     border: none;
+    background-color: rgb(253, 119, 119);
 }
 
-.eliminar:hover {
-    background-color: rgb(250, 117, 117);
-
-}
-
-.eliminar:active {
-    background-color: rgb(170, 117, 250);
-
-}
-
-.entradas {
-    margin: 30px 0 0;
-    padding: 4px;
-    border-radius: 10px;
-    background-color: rgb(132, 135, 136);
-    text-align: center;
-}
-
-
-.entradas button,
-.entradas input,
-.entradas select,
-.entradas #agregar-propina {
-    font-size: 12px;
-    padding: 3px;
-}
-
-.entradas button,
-.entradas #agregar-propina,
-.acciones button {
-    border: none;
-    border-radius: 10px;
-    padding: 3px;
-    background-color: rgb(188, 243, 116);
-}
-
-.entradas button:hover,
-.entradas #agregar-propina:hover,
-.acciones button:hover {
-    background-color: rgb(151, 245, 29);
-}
-
-.entradas button:active,
-.entradas #agregar-propina:active,
-.acciones button:active {
-    background-color: rgb(126, 148, 246);
-}
-
-#despliege-propinas ul {
-    display: flex;
-
-}
-
-#despliege-propinas li {
-    color: black;
+.inputs {
     border-radius: 10px;
     padding: 10px;
+    background-color: rgb(27, 104, 77);
+}
+
+input,
+button {
+    padding: 6px;
+    border: none;
+    border-radius: 10px;
+    width: 4rem;
+}
+
+.ficha-beneficiado {
     margin: 10px;
-    background-color: rgb(134, 210, 236);
+    border-radius: 10px;
+}
+
+.header {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgb(212, 212, 49);
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
-.respaldar {
-    margin-top: 20px;
+img {
+    border-radius: 50%;
 }
 
-.respaldar:hover {
-    background-color: rgb(31, 124, 255);
-}
-
-
-#reporte .ficha-beneficiado  {
-    display: inline-block;
-}
-
-#reporte .ficha-beneficiado label input {
-    font-size: 14px;
-}
-#reporte .ficha-beneficiado strong {
-    color: rgb(173, 0, 0);
-    font-size: 22px;
-
-}
-
-#reporte .entradas button {
-    padding: 20px;
-    font-size: 20px;
-}
-
-#entregas {
-    margin-top: 20px;
-}
-
-.error {
-    margin: 10px;
-    padding: 8px;
+.adelantos,
+.dias-faltantes, 
+.resultados {
     border-radius: 10px;
-    color: rgb(236, 90, 90);
-    background-color: whitesmoke;
-    font-size: 16px;
+    background-color: antiquewhite;
+
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #4d4f60;
-    color: white;
-    text-align: center;
-    font-size: 16px;
-    padding: 5px;
+.lista-dias-faltantes div,
+.lista-adelantos div {
+    border-radius: 3px;
+    padding: 4px;
+    background-color: aliceblue;
+    margin: 4px 0;
+    display: flex;
+    justify-content: space-between;
 }
 
-.entregada {
-    background-color: rgb(201, 249, 155);
+.adelantos .entradas,
+.dias-faltantes .entradas {
+    margin: 10px 0 0;
+    border-radius: 10px;
+    padding: 3px;
+    background-color: rgb(132, 191, 191);
+
 }
 
-@media screen and (max-width: 600px) {
+.ficha-beneficiado input,
+.ficha-beneficiado button {
+    font-size: 12px;
 
-    * {
-        font-size: 12px;
-    }
+}
 
-    #app{
-        margin-top: 0;
-        padding: 0;
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        top: 70px
-    }
-
-   header {
-       height: 50px;
-    }
-
-    nav {
-        display: none;
-    }
+.resultados {
+    padding: 10px;
 }

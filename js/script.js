@@ -293,9 +293,9 @@ function procesarPropinas(data) {
 function seccionTemplate(titulo) {
     const seccion = document.createElement('seccion')
     seccion.innerHTML = `
+    <h2>${titulo}</h2>
     <div class="lista"></div>
     <div class="inputs">
-    <h2>${titulo}</h2>
     </div>
     `
     return seccion
@@ -311,7 +311,7 @@ function seccionInput(id, className, inputs) {
 }
 
 function item(text, accionesBoton) {
-    let li = document.createElement('li')
+    let li = document.createElement('div')
     li.innerHTML = text
 
     li.querySelector('button').onclick = () => {
@@ -320,7 +320,6 @@ function item(text, accionesBoton) {
     }
     return li
 }
-
 
 function error(mensaje) {
     let errorCard = document.createElement('div')
@@ -351,11 +350,10 @@ function validar(dato, validacion, nodoRender, mensaje) {
 }
 
 //obtener beneficiados
-let beneficados = getDatos('beneficiados', procesarBeneficiados) || []
+let beneficados = []
 
 //Obtener propinas
 let propinas = getDatos('propinas', procesarPropinas) || []
-
 
 let secciones = document.querySelectorAll('section')
 secciones.forEach(seccion => {
@@ -370,31 +368,34 @@ secciones.forEach(seccion => {
         }
 
         function seccionBeneficiado(beneficiado) {
-            let { id, nombre, adelantos, diasFaltantes } = beneficiado
+            let { id, nombre, img, adelantos, diasFaltantes } = beneficiado
             let seccion = document.createElement('section')
 
             seccion.id = id
             seccion.className = 'ficha-beneficiado'
             seccion.innerHTML = `
+            <div class="header">
+            <img src="${img}"/>
             <h3>${nombre}</h3>
-            <button class="eliminar-beneficiado">x</button>
-            <ul class="adelantos">
+            <button class="eliminar-beneficiado eliminar">x</button>
+            </div>
+            <div class="adelantos">
                 <h4>Adelantos</h4>
-                <ul></ul>
+                <div class="lista-adelantos"></div>
                 <div class="entradas">
                 <input type="text" placeholder="Dia" class="dia"></input>
                 <input type="number" placeholder="Monto" class="monto"></input>
                     <button>Agregar</button>
                 </div>
-            </ul>
-            <ul class="dias-faltantes">
+            </div>
+            <div class="dias-faltantes">
                 <h4>Faltas</h4>
-                <ul></ul>
+                <div class="lista-dias-faltantes"></div>
                 <div class="entradas">
                     <input type="text" placeholder="Dia"></input>
                     <button>Agregar</button>
                 </div>
-            </ul>
+            </div>
             `
 
             let adelantoItems = seccion.querySelector('.adelantos')
@@ -403,11 +404,11 @@ secciones.forEach(seccion => {
 
             // Listar adelantos
             adelantos.forEach(adelanto => {
-                adelantoItems.querySelector('ul').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
+                adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
             })
 
             function itemAdelanto(dia, monto) {
-                let itemAdelanto = item(`${dia}: ${monto}<button>x</button>`, [
+                let itemAdelanto = item(`${dia}: $${monto}<button class="eliminar">x</button>`, [
                     () => eliminarAdelanto(id, dia, beneficados),
                     () => respaldar()
                 ])
@@ -425,13 +426,13 @@ secciones.forEach(seccion => {
 
                 if (dia && monto) {
                     agregarAdelanto(id, dia, monto, beneficados)
-                    adelantoItems.querySelector('ul').appendChild(itemAdelanto(dia, monto))
+                    adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(dia, monto))
                 }
             }
 
             //agregar dias faltantes
             function itemDiaFaltante(dia) {
-                let itemDia = item(`${dia} <button>x</button>`, [
+                let itemDia = item(`${dia} <button class="eliminar">x</button>`, [
                     () => eliminarDiaFaltante(id, dia, beneficados),
                     () => respaldar()
                 ])
@@ -443,7 +444,7 @@ secciones.forEach(seccion => {
             let diaItems = seccion.querySelector('.dias-faltantes')
 
             diasFaltantes.forEach(dia => {
-                diaItems.querySelector('ul').appendChild(itemDiaFaltante(dia))
+                diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
             })
 
             diaItems.querySelector('.entradas').querySelector('button').onclick = () => {
@@ -453,7 +454,7 @@ secciones.forEach(seccion => {
 
                 if (dia) {
                     if (agregarDiasFalatantes(id, dia, beneficados)) {
-                        diaItems.querySelector('ul').appendChild(itemDiaFaltante(dia))
+                        diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
                     }
                 }
             }
@@ -467,6 +468,19 @@ secciones.forEach(seccion => {
 
             return seccion
         }
+
+        fetch('https://randomuser.me/api/?results=10').then(response => response.json()).then(response => {
+            console.log(response.results)
+
+            response.results.forEach(data => {
+                let beneficiado = new Beneficiado()
+                beneficiado.nombre = data.name.first
+                beneficiado.img = data.picture.thumbnail
+                beneficados.push(beneficiado)
+                seccion.querySelector('.lista').appendChild(seccionBeneficiado(beneficiado))
+                console.log(beneficados)
+            })
+        })
 
         //Listar Beneficiados
         beneficados.forEach(beneficiado => {
@@ -498,7 +512,7 @@ secciones.forEach(seccion => {
     if (seccion.id === 'propinas') {
 
         function itemPropina(dia, monto) {
-            let itemPropina = item(`${dia}: $ ${monto} <button>x</buton>`, [
+            let itemPropina = item(`<p>${dia} <strong>$${monto}</strong></p> <button class="eliminar">x</buton>`, [
                 () => propinas = eliminarPropina(dia, propinas),
                 () => setDatos('propinas', propinas)
             ])
@@ -541,21 +555,37 @@ secciones.forEach(seccion => {
 
         function itemTotal(item) {
             let div = document.createElement('div')
+            div.id = item.id
             div.className = 'ficha-beneficiado'
 
             div.innerHTML = `
+            <div class="header">
                 <h3>${item.nombre}</h3>
-                <p>Descuentos: ${item.totalDescuentos}</p>
-                <p>Total: ${item.totalEntrega}</p>
+                <p>Total: <strong>$${item.totalEntrega}</strong></p>
+            </div>
+            <div class="resultados">
+                <p>Descuentos: $${item.totalDescuentos}</p>
+                <span>Propina Entregada <input type="checkbox"></input></span>
+            </div>
                 `
+            if (item.entregada) {
+                div.querySelector('input[type="checkbox"]').checked = true
+            }
+
+            div.querySelector('input[type="checkbox"]').onclick = () => {
+                item.entregada = true
+                localStorage.setItem('reporte', JSON.stringify(reporte))
+            }
+
             return div
         }
 
         //Listar Reporte Guardado
-        reporte.resultados.forEach(item => {
-            seccion.querySelector('.lista').appendChild(itemTotal(item))
-        })
-
+        if (reporte.resultados) {
+            reporte.resultados.forEach(item => {
+                seccion.querySelector('.lista').appendChild(itemTotal(item))
+            })
+        }
 
         //Generar Reporte
         seccion.querySelector('.inputs').appendChild(seccionInput(null, 'entradas', `<button>Generar Reporte</button>`))
@@ -567,10 +597,10 @@ secciones.forEach(seccion => {
             let items = seccion.querySelector('.lista').querySelectorAll('div')
             items.forEach(item => item.remove())
 
-            console.log(reporte)
             reporte.resultados.forEach(item => {
                 seccion.querySelector('.lista').appendChild(itemTotal(item))
             })
+
         }
     }
 })
