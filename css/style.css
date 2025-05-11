@@ -5,29 +5,42 @@
 }
 
 body {
-    background-color: black;
+    background-color: rgb(58, 58, 58);
 }
 
-#app {
-    margin: 60px auto;
-    max-width: 800px;
+section {
+    
+    background-color: rgb(101, 101, 101);
+    margin: 10px;
+    padding: 5px;
+    border-radius: 10px;
 }
 
-h1 {
-    font-size: 1rem;
+button,
+input,
+select {
+    border-radius: 10px;
+    border: none;
+    width: 5rem;
+    background-color: rgb(220, 222, 223);
+    color: rgb(96, 96, 96);
+    font-size: 0.8rem;
 }
 
-h2 {
-
-font-size: 1.5rem;}
-
-h4 {
-    padding: 10px;
+button {
+    cursor: pointer;
 }
 
+button:hover {
+    background-color: aquamarine;
+}
 
-ul {
-    margin: 10px 0;
+img {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(131, 165, 154);
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 header {
@@ -43,124 +56,95 @@ header {
     justify-content: space-between;
 }
 
-nav  ul{
-    margin: 0 20px 0;
+nav ul {
     list-style: none;
     display: flex;
 }
-nav  ul li{
-    margin: 10px;
+
+nav ul li {
+    margin-right: 20px;
 }
 
-#propinas,
-#beneficiados,
-#resultados {
-    background-color: rgb(182, 202, 218);
-    margin: 10px;
-    border-radius: 10px;
+h1 {
+    font-size: 1rem;
+}
+
+h4 {
+    margin: 3px;
+    font-weight: 600;
+}
+
+#app {
+    margin: 60px auto;
+    max-width: 800px;
+}
+
+.ficha-beneficiado {
+    width: 260px;
+    margin: 20px;
+    background-color: #313131;
+    color: rgb(186, 190, 194);
+}
+
+.ficha-beneficiado .header {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.adelantos,
+.dias-faltantes {
+
+    background-color: #3f3f3f;
+    margin: 10px 0 0;
+}
+
+.entradas {
+    margin: 10px 0 0;
+    padding: 5px;
+    background-color: rgb(144, 184, 184);
+    border-radius: 10px
+}
+
+.lista-dias-faltantes div,
+.lista-adelantos div {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px;
+    background-color: #333;
+    margin: 2px;
+
+}
+
+.lista-dias-faltantes button,
+.lista-adelantos button {
+    margin-left: 10px;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+
 }
 
 .lista {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
 }
 
 #propinas .lista div {
-    width: 4rem;
     margin: 10px;
     padding: 10px;
-    background-color: rgb(220, 229, 229);
-    border-radius: 10px;
+    width: 5rem;
+    background-color: rgb(141, 204, 204);
     text-align: center;
 }
 
-strong {
-    font-size: 1.3rem;
+#propinas .lista div strong {
     display: block;
-    color: brown;
-
-}
-
-.eliminar {
-    padding: 0;
-    border-radius: 50%;
-    width: 1rem;
-    height: 1rem;
-    border: none;
-    background-color: rgb(253, 119, 119);
-}
-
-.inputs {
-    border-radius: 10px;
-    padding: 10px;
-    background-color: rgb(27, 104, 77);
-}
-
-
-.entradas button,
-.entradas input,
-.entradas select,
-.entradas #agregar-propina {
-    padding: 3px;
-}
-
-.entradas button,
-.entradas #agregar-propina,
-.acciones button {
-    border: none;
-    border-radius: 10px;
-    padding: 3px;
-    background-color: rgb(188, 243, 116);
-}
-
-.ficha-beneficiado input,
-.ficha-beneficiado select,
-.ficha-beneficiado .adelantos button,
-.ficha-beneficiado .dias-faltantes button {
-    width: 4rem;
-    font-size: 0.7rem;
-}
-
-.header {
-    border-radius: 10px;
-    padding: 10px;
-    background-color: rgb(233, 233, 147);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.respaldar {
-    margin-top: 20px;
-}
-
-.respaldar:hover {
-    background-color: rgb(31, 124, 255);
-}
-
-
-#reporte .ficha-beneficiado strong {
-    color: rgb(173, 0, 0);
-    font-size: 20px;
-
-}
-
-#reporte .entradas button {
-    padding: 20px;
-    font-size: 20px;
-}
-
-.adelantos .entradas,
-.dias-faltantes .entradas {
-    margin: 10px 0 0;
-    border-radius: 10px;
-    padding: 3px;
-    background-color: rgb(132, 191, 191);
-
-}
-
-.resultados {
-    padding: 10px;
+    margin: 4px;
 }
 
 footer {

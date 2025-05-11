@@ -188,6 +188,7 @@ function agregarAdelanto(id, dia, monto, lista) {
 //Eliminar Adelanto
 function eliminarAdelanto(id, dia, lista) {
     let beneficiado = obtenerBeneficiadoId(id, lista)
+
     if (beneficiado !== null && typeof dia === 'string' && dia.trim() !== '') {
         beneficiado.adelantos = beneficiado.adelantos.filter(adelanto => adelanto.dia !== dia)
         return true
@@ -291,7 +292,6 @@ function procesarPropinas(data) {
 
 
 // INTERFAZ
-
 function seccionTemplate(titulo) {
     const seccion = document.createElement('seccion')
     seccion.innerHTML = `
@@ -319,7 +319,7 @@ function seccionBeneficiado(beneficiado) {
                 <h4>Adelantos</h4>
                 <div class="lista-adelantos"></div>
                 <div class="entradas">
-                <input type="number" placeholder="Monto" class="monto"></input>
+                    <input type="number" placeholder="Monto" class="monto"></input>
                     <button>Agregar</button>
                 </div>
             </div>
@@ -355,8 +355,8 @@ function seccionBeneficiado(beneficiado) {
         let dia = adelantoItems.querySelector('select').value
         let monto = parseInt(adelantoItems.querySelector('.monto').value)
 
-        dia = validar(dia, dia.trim() === '', adelantoItems, 'Dia no Valido')
-        monto = validar(monto, monto < 0 || monto === NaN, adelantoItems, 'Monto no Valido')
+        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
+        monto = validar(monto, monto < 0 || monto !== NaN, 'Monto no Valido')
 
         if (dia && monto) {
             agregarAdelanto(id, dia, monto, beneficiados)
@@ -386,7 +386,7 @@ function seccionBeneficiado(beneficiado) {
     diaItems.querySelector('.entradas').querySelector('button').onclick = () => {
         let dia = diaItems.querySelector('select').value
 
-        dia = validar(dia, dia.trim() === '', diaItems, 'Dia no Valido')
+        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
 
         if (dia) {
             if (agregarDiasFalatantes(id, dia, beneficiados)) {
@@ -458,20 +458,27 @@ function error(mensaje) {
     return errorCard
 }
 
-function validar(dato, validacion, nodoRender, mensaje) {
+function validar(dato, validacion, mensaje) {
     if (validacion) {
-        let errorMensaje = nodoRender.querySelector('.error')
-
-        if (errorMensaje) errorMensaje.remove()
-        nodoRender.appendChild(error(mensaje))
+        Toastify({
+            text: mensaje,
+            duration: 4000,
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                color: "black",
+                background: "linear-gradient(to right,rgb(124, 224, 212),rgb(61, 159, 201))",
+                borderRadius: "10px"
+            },
+            onClick: function () { } // Callback after click
+        }).showToast();
 
         return null
 
     } else {
-        let errorMensaje = nodoRender.querySelector('.error')
-
-        if (errorMensaje) errorMensaje.remove()
-
         return dato
     }
 }
@@ -516,16 +523,19 @@ let propinas = getDatos('propinas', procesarPropinas) || []
 let resultados = JSON.parse(localStorage.getItem('resultados')) || []
 
 // Obtener datos de usuarios api
-const URL = 'https://randomuser.me/api/?results=10&seed=miclaveSecreta'
+// const URL = 'https://randomuser.me/api/?results=10&seed=miclaveSecreta'
+const URL = './db/beneficiados.json'
+
 async function getApi(url, nodo, plantilla) {
     try {
         let solicitud = await fetch(url)
         let respuesta = await solicitud.json()
+        console.log(respuesta)
 
-        respuesta.results.forEach(data => {
+        respuesta.forEach(data => {
             let beneficiado = new Beneficiado()
-            beneficiado.nombre = data.name.first
-            beneficiado.img = data.picture.thumbnail
+            beneficiado.nombre = data.nombre
+            beneficiado.img = data.img
             beneficiados.push(beneficiado)
             nodo.appendChild(plantilla(beneficiado))
         })
@@ -560,8 +570,9 @@ secciones.forEach(seccion => {
             let dia = seccion.querySelector('select').value
             let monto = parseInt(seccion.querySelector('input[type="number"]').value)
 
-            dia = validar(dia, dia.trim() === '', seccion.querySelector('.entradas'), 'Ingresa un dia valido')
-            monto = validar(monto, monto < 0 || monto === NaN, seccion.querySelector('.entradas'), 'Ingresa un monto valido')
+            dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
+            console.log(monto)
+            monto = validar(monto, monto < 0 || monto !== NaN, 'Ingresa un monto valido')
 
             if (dia && monto) {
                 if (agregarPropinas(dia, monto, propinas)) {
@@ -595,7 +606,7 @@ secciones.forEach(seccion => {
 
             let nombre = agregarBeneficiadoBtn.parentElement.querySelector('input').value
 
-            nombre = validar(nombre, nombre.trim() === '', seccion, 'Nombre no Valido')
+            nombre = validar(nombre, nombre.trim() === '', 'Nombre no Valido')
 
             if (nombre) {
                 agregarBeneficiado(nombre, beneficiados)

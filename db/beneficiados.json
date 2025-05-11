@@ -1,5 +1,30 @@
 [
     {
-    "nombre" : "Jose"
+    "nombre" : "Alex",
+    "img": "https://media-eze1-1.cdn.whatsapp.net/v/t61.24694-24/56767120_1375564852600615_2026229192156250112_n.jpg?ccb=11-4&oh=01_Q5Aa1gGslpgxNzkArm5IlacfyBBYZzUJ3xMWG4NyHKIaKyJruQ&oe=682D3D1E&_nc_sid=5e03e0&_nc_cat=105"
+    },
+    {
+    "nombre" : "Carlos",
+    "img": "https://media-eze1-1.cdn.whatsapp.net/v/t61.24694-24/104202330_113593173554710_7317135423083754045_n.jpg?ccb=11-4&oh=01_Q5Aa1gGv3icnryw43BvArBAheRNF49pa9tnRUEjClDNjeTgdEg&oe=682D5E58&_nc_sid=5e03e0&_nc_cat=101"
+    },
+    {
+    "nombre" : "Juan",
+    "img": "https://media-eze1-1.cdn.whatsapp.net/v/t61.24694-24/485861287_1001002592203484_1969384938826931595_n.jpg?ccb=11-4&oh=01_Q5Aa1gF8bZRsCkidmyW5JFk-8a2wvzv7ZINycn5M4UDyP-M4IA&oe=682D71ED&_nc_sid=5e03e0&_nc_cat=108"
+    }, 
+    {
+    "nombre" : "Alejandro",
+    "img": " "
+    },
+    {
+    "nombre" : "Alberto",
+    "img": " "
+    }, 
+    {
+    "nombre" : "Yander",
+    "img": " "
+    },
+    {
+    "nombre" : "nacho",
+    "img": " "
     }
 ]
