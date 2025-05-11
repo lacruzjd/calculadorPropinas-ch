@@ -356,7 +356,7 @@ function seccionBeneficiado(beneficiado) {
         let monto = parseInt(adelantoItems.querySelector('.monto').value)
 
         dia = validar(dia, dia.trim() === '', 'Dia no Valido')
-        monto = validar(monto, monto < 0 || monto !== NaN, 'Monto no Valido')
+        monto = validar(monto, monto < 0 || monto === NaN, 'Monto no Valido')
 
         if (dia && monto) {
             agregarAdelanto(id, dia, monto, beneficiados)
@@ -571,7 +571,7 @@ secciones.forEach(seccion => {
             let monto = parseInt(seccion.querySelector('input[type="number"]').value)
 
             dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
-            console.log(monto)
+            
             monto = validar(monto, monto < 0 || monto === NaN, 'Ingresa un monto valido')
 
             if (dia && monto) {
