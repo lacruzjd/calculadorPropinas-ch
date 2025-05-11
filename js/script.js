@@ -572,7 +572,7 @@ secciones.forEach(seccion => {
 
             dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
             console.log(monto)
-            monto = validar(monto, monto < 0 || monto !== NaN, 'Ingresa un monto valido')
+            monto = validar(monto, monto < 0 || monto === NaN, 'Ingresa un monto valido')
 
             if (dia && monto) {
                 if (agregarPropinas(dia, monto, propinas)) {
