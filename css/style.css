@@ -96,7 +96,7 @@ h4 {
 }
 
 .ficha-beneficiado {
-    width: 210px;
+    width: 240px;
     margin: 20px;
     background-color: #313131;
     color: rgb(186, 190, 194);
@@ -179,6 +179,7 @@ h4 {
     padding: 10px;
     background-color: #3f3f3f;
 }
+
 .resultados span{
     margin: 10px 0;
     display: block;
