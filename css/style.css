@@ -8,8 +8,7 @@ body {
     background-color: rgb(58, 58, 58);
 }
 
-section {
-    
+section{
     background-color: rgb(101, 101, 101);
     margin: 10px;
     padding: 5px;
@@ -69,6 +68,10 @@ h1 {
     font-size: 1rem;
 }
 
+h2 {
+    color: rgb(209, 209, 209);
+}
+
 h4 {
     margin: 3px;
     font-weight: 600;
@@ -80,7 +83,7 @@ h4 {
 }
 
 .ficha-beneficiado {
-    width: 260px;
+    width: 250px;
     margin: 20px;
     background-color: #313131;
     color: rgb(186, 190, 194);
@@ -95,9 +98,9 @@ h4 {
     align-items: center;
 }
 
+
 .adelantos,
 .dias-faltantes {
-
     background-color: #3f3f3f;
     margin: 10px 0 0;
 }
@@ -132,6 +135,7 @@ h4 {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
+    justify-content: center;
 }
 
 #propinas .lista div {
@@ -145,6 +149,21 @@ h4 {
 #propinas .lista div strong {
     display: block;
     margin: 4px;
+}
+
+
+#resultados div {
+    border-radius: 10px;
+}
+#resultados strong {
+    color: rgb(111, 221, 184);
+    font-size: 1.5rem;
+    border-radius: 10px;
+}
+
+.resultados{
+    padding: 10px;
+    background-color: #3f3f3f;
 }
 
 footer {
