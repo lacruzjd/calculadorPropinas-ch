@@ -135,12 +135,7 @@ class CalculadorTotal {
         this.setTotalDescuentos()
         this.setTotal()
 
-        return {
-            resultados: this.beneficiados,
-            estadisticaPropinas: [{
-                totalRecibidas: propinas.reduce((acc, propina) => acc + propina.monto, 0)
-            }]
-        }
+        return this.beneficiados
     }
 }
 
@@ -304,208 +299,6 @@ function seccionTemplate(titulo) {
     return seccion
 }
 
-function seccionBeneficiado(beneficiado) {
-    let { id, nombre, img, adelantos, diasFaltantes } = beneficiado
-    let seccion = document.createElement('section')
-    seccion.id = id
-    seccion.className = 'ficha-beneficiado'
-    seccion.innerHTML = `
-            <div class="header">
-            <img src="${img}"/>
-            <h3>${nombre}</h3>
-            <button class="eliminar-beneficiado eliminar">x</button>
-            </div>
-            <div class="adelantos">
-                <h4>Adelantos</h4>
-                <div class="lista-adelantos"></div>
-                <div class="entradas">
-                    <input type="number" placeholder="Monto" class="monto"></input>
-                    <button>Agregar</button>
-                </div>
-            </div>
-            <div class="dias-faltantes">
-                <h4>Faltas</h4>
-                <div class="lista-dias-faltantes"></div>
-                <div class="entradas">
-                    <button>Agregar</button>
-                </div>
-            </div>
-            `
-    let adelantoItems = seccion.querySelector('.adelantos')
-
-    // Listar adelantos
-    adelantos.forEach(adelanto => {
-        adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
-    })
-
-    function itemAdelanto(dia, monto) {
-        let itemAdelanto = item(`${dia}: $${monto}<button class="eliminar">x</button>`, [
-            () => eliminarAdelanto(id, dia, beneficiados),
-            () => respaldar()
-        ])
-
-        respaldar()
-        return itemAdelanto
-    }
-
-    adelantoItems.querySelector('.entradas').prepend(selectSemana())
-
-    adelantoItems.querySelector('.entradas').querySelector('button').onclick = () => {
-
-        let dia = adelantoItems.querySelector('select').value
-        let monto = parseInt(adelantoItems.querySelector('.monto').value)
-
-        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
-        monto = validar(monto, monto < 0 || monto !== NaN, 'Monto no Valido')
-
-        if (dia && monto) {
-            agregarAdelanto(id, dia, monto, beneficiados)
-            adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(dia, monto))
-        }
-    }
-
-    //agregar dias faltantes
-    function itemDiaFaltante(dia) {
-        let itemDia = item(`${dia} <button class="eliminar">x</button>`, [
-            () => eliminarDiaFaltante(id, dia, beneficiados),
-            () => respaldar()
-        ])
-
-        respaldar()
-        return itemDia
-    }
-
-    let diaItems = seccion.querySelector('.dias-faltantes')
-
-    diaItems.querySelector('.entradas').prepend(selectSemana())
-
-    diasFaltantes.forEach(dia => {
-        diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
-    })
-
-    diaItems.querySelector('.entradas').querySelector('button').onclick = () => {
-        let dia = diaItems.querySelector('select').value
-
-        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
-
-        if (dia) {
-            if (agregarDiasFalatantes(id, dia, beneficiados)) {
-                diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
-            }
-        }
-    }
-
-    //Eliminar Beneficiado
-    seccion.querySelector('.eliminar-beneficiado').onclick = () => {
-        beneficiados = eliminarBeneficiado(id, beneficiados)
-        seccion.remove()
-        respaldar()
-    }
-
-    return seccion
-}
-
-function selectSemana() {
-    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-    const select = document.createElement('select')
-
-    dias.forEach(dia => {
-        const opcion = document.createElement("option")
-        opcion.value = dia.toLowerCase()
-        opcion.textContent = dia
-        select.appendChild(opcion)
-    })
-
-    return select
-}
-
-function seccionInput(id, className, inputs) {
-    let seccion = document.createElement('section')
-    seccion.id = id
-    seccion.className = className
-    seccion.innerHTML = inputs
-
-    return seccion
-}
-
-function itemConBotonEliminar(text, accionesBoton) {
-    let li = document.createElement('div')
-    li.innerHTML = `${text}<button class="eliminar">x</buton>`
-
-    li.querySelector('button').onclick = () => {
-        accionesBoton()
-        li.remove()
-    }
-
-    return li
-}
-
-function validar(dato, validacion, mensaje) {
-    if (validacion) {
-        Toastify({
-            text: mensaje,
-            duration: 4000,
-            newWindow: true,
-            close: true,
-            gravity: "top", // `top` or `bottom`
-            position: "center", // `left`, `center` or `right`
-            stopOnFocus: true, // Prevents dismissing of toast on hover
-            style: {
-                color: "black",
-                background: "linear-gradient(to right,rgb(124, 224, 212),rgb(61, 159, 201))",
-                borderRadius: "10px"
-            },
-            onClick: function () { } // Callback after click
-        }).showToast();
-
-        return null
-
-    } else {
-        return dato
-    }
-}
-
-function itemTotal(item) {
-    let totalEntrega = Math.floor(item.totalEntrega)
-    let totalDescuentos = Math.floor(item.totalDescuentos)
-
-    let div = document.createElement('div')
-    div.id = item.id
-    div.className = 'ficha-beneficiado'
-
-    div.innerHTML = `
-            <div class="header">
-                <h3>${item.nombre}</h3>
-                <p>Total: <strong>$${totalEntrega}</strong></p>
-            </div>
-            <div class="resultados">
-                <p>Descuentos: $${totalDescuentos}</p>
-                <span>Propina Entregada <input type="checkbox"></input></span>
-            </div>
-                `
-    if (item.entregada) {
-        div.querySelector('input[type="checkbox"]').checked = true
-    }
-
-    div.querySelector('input[type="checkbox"]').onclick = () => {
-        item.entregada = true
-        localStorage.setItem('resultados', JSON.stringify(resultados))
-    }
-
-    return div
-}
-
-function seccionTemplate(titulo) {
-    const seccion = document.createElement('seccion')
-    seccion.innerHTML = `
-    <div class="header">
-        <h2>${titulo}</h2>
-    </div>
-    <div class="lista"></div>
-    <div class="inputs"></div>
-    `
-    return seccion
-}
 
 function seccionBeneficiado(beneficiado) {
     let { id, nombre, img, adelantos, diasFaltantes } = beneficiado
@@ -561,7 +354,7 @@ function seccionBeneficiado(beneficiado) {
         let monto = parseInt(adelantoItems.querySelector('.monto').value)
 
         dia = validar(dia, dia.trim() === '', 'Dia no Valido')
-        monto = validar(monto, monto < 0 || monto === NaN, 'Monto no Valido')
+        monto = validar(monto, monto < 0 || monto !== NaN, 'Monto no Valido')
 
         if (dia && monto) {
             agregarAdelanto(id, dia, monto, beneficiados)
@@ -615,6 +408,109 @@ function seccionBeneficiado(beneficiado) {
     return seccion
 }
 
+function selectSemana() {
+    const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    const select = document.createElement('select')
+
+    dias.forEach(dia => {
+        const opcion = document.createElement("option")
+        opcion.value = dia.toLowerCase()
+        opcion.textContent = dia
+        select.appendChild(opcion)
+    })
+
+    return select
+}
+
+function seccionInput(id, className, inputs) {
+    let seccion = document.createElement('section')
+    seccion.id = id
+    seccion.className = className
+    seccion.innerHTML = inputs
+
+    return seccion
+}
+
+function itemConBotonEliminar(text, accionesBoton) {
+    let li = document.createElement('div')
+    li.innerHTML = `${text}<button class="eliminar">x</buton>`
+
+    li.querySelector('button').onclick = () => {
+        accionesBoton()
+        li.remove()
+    }
+
+    return li
+}
+
+function validar(dato, validacion, mensaje) {
+
+    if (validacion) {
+        Toastify({
+            text: mensaje,
+            duration: 4000,
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                color: "black",
+                background: "linear-gradient(to right,rgb(124, 224, 212),rgb(61, 159, 201))",
+                borderRadius: "10px"
+            },
+            onClick: function () { } // Callback after click
+        }).showToast();
+        
+        return null
+    } else {
+        return dato
+    }
+}
+
+function itemTotal(item) {
+    let totalEntrega = Math.floor(item.totalEntrega)
+    let totalDescuentos = Math.floor(item.totalDescuentos)
+
+    let div = document.createElement('div')
+    div.id = item.id
+    div.className = 'ficha-beneficiado'
+
+    div.innerHTML = `
+            <div class="header">
+                <h3>${item.nombre}</h3>
+                <p>Total: <strong>$${totalEntrega}</strong></p>
+            </div>
+            <div class="resultados">
+                <p>Descuentos: $${totalDescuentos}</p>
+                <span>Propina Entregada <input type="checkbox"></input></span>
+            </div>
+                `
+    if (item.entregada) {
+        div.querySelector('input[type="checkbox"]').checked = true
+    }
+
+    div.querySelector('input[type="checkbox"]').onclick = () => {
+        item.entregada = true
+        localStorage.setItem('resultados', JSON.stringify(resultados))
+    }
+
+    return div
+}
+
+function seccionTemplate(titulo) {
+    const seccion = document.createElement('seccion')
+    seccion.innerHTML = `
+    <div class="header">
+        <h2>${titulo}</h2>
+    </div>
+    <div class="lista"></div>
+    <div class="inputs"></div>
+    `
+    return seccion
+}
+
+
 //Obtener Datos de Localstorage
 let beneficiados = getDatos('beneficiados', procesarBeneficiados) || []
 let propinas = getDatos('propinas', procesarPropinas) || []
@@ -650,9 +546,18 @@ secciones.forEach(seccion => {
 
     if (seccion.id === 'propinas') {
 
+        function itemPropina(text) {
+            return itemConBotonEliminar(`${text}`,
+                () => {
+                    eliminarPropina(dia, beneficiados)
+                    setDatos('propinas', propinas)
+                }
+            )
+        }
+
         //listar propinas
         propinas.forEach(propina => {
-            seccion.querySelector('.lista').appendChild(itemPropina(propina.dia, propina.monto))
+            seccion.querySelector('.lista').appendChild(itemPropina(`${propina.dia}: <strong> $${propina.monto} </strong>`))
         })
 
         //Agregar propinas 
@@ -669,12 +574,13 @@ secciones.forEach(seccion => {
             let monto = parseInt(seccion.querySelector('input[type="number"]').value)
 
             dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
-            
-            monto = validar(monto, monto < 0, 'Ingresa un monto valido')
+
+            monto = validar(monto, monto < 0 || monto !== NaN, 'Ingresa un monto valido')
 
             if (dia && monto) {
                 if (agregarPropinas(dia, monto, propinas)) {
-                    seccion.querySelector('.lista').appendChild(itemPropina(dia, monto))
+                    seccion.querySelector('.lista').appendChild(itemPropina(`${dia}: <strong>$${monto}</strong>`))
+                    setDatos('propinas', propinas)
                 }
             }
         }
@@ -715,8 +621,9 @@ secciones.forEach(seccion => {
     }
 
     if (seccion.id === 'resultados') {
-        if (resultados.resultados.length > 0) {
-            resultados.resultados.forEach(item => {
+        console.log(resultados)
+        if (resultados.length > 0) {
+            resultados.forEach(item => {
                 seccion.querySelector('.lista').appendChild(itemTotal(item))
             })
         }
@@ -726,27 +633,22 @@ secciones.forEach(seccion => {
 document.querySelector('#nueva-semana').onclick = () => {
     beneficiados = []
     propinas = []
+    resultados = []
     localStorage.clear()
+    window.location.reload(true);
+    window.scrollTo(0, 0);
 
-    document.querySelector('#beneficiados').querySelector('.lista').querySelectorAll('section').forEach(section => section.remove())
-    getApi(URL, document.querySelector('#beneficiados').querySelector('.lista'), seccionBeneficiado)
-
-    document.querySelector('#propinas').querySelector('.lista').querySelectorAll('div').forEach(item => item.remove())
-
-    document.querySelector('#resultados').querySelector('.lista').querySelectorAll('div').forEach(item => item.remove())
 
 }
 
-document.querySelector('#generar-reporte').onclick = () => {
+document.querySelector('#generar-resultados').onclick = () => {
     resultados = generarTotales(beneficiados, propinas)
-
-    console.log('guardar reporer')
-    localStorage.setItem('resultados', JSON.stringify(resultados))
+    setDatos('resultados', resultados)
 
     let items = document.querySelector('#resultados').querySelector('.lista').querySelectorAll('div')
     items.forEach(item => item.remove())
 
-    resultados.resultados.forEach(item => {
+    resultados.forEach(item => {
         document.querySelector('#resultados').querySelector('.lista').appendChild(itemTotal(item))
     })
 }
