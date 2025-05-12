@@ -292,6 +292,118 @@ function procesarPropinas(data) {
 
 
 // INTERFAZ
+function seccionTemplate(titulo) {
+    const seccion = document.createElement('seccion')
+    seccion.innerHTML = `
+    <div class="header">
+        <h2>${titulo}</h2>
+    </div>
+    <div class="lista"></div>
+    <div class="inputs"></div>
+    `
+    return seccion
+}
+
+function seccionBeneficiado(beneficiado) {
+    let { id, nombre, img, adelantos, diasFaltantes } = beneficiado
+    let seccion = document.createElement('section')
+    seccion.id = id
+    seccion.className = 'ficha-beneficiado'
+    seccion.innerHTML = `
+            <div class="header">
+            <img src="${img}"/>
+            <h3>${nombre}</h3>
+            <button class="eliminar-beneficiado eliminar">x</button>
+            </div>
+            <div class="adelantos">
+                <h4>Adelantos</h4>
+                <div class="lista-adelantos"></div>
+                <div class="entradas">
+                    <input type="number" placeholder="Monto" class="monto"></input>
+                    <button>Agregar</button>
+                </div>
+            </div>
+            <div class="dias-faltantes">
+                <h4>Faltas</h4>
+                <div class="lista-dias-faltantes"></div>
+                <div class="entradas">
+                    <button>Agregar</button>
+                </div>
+            </div>
+            `
+    let adelantoItems = seccion.querySelector('.adelantos')
+
+    // Listar adelantos
+    adelantos.forEach(adelanto => {
+        adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
+    })
+
+    function itemAdelanto(dia, monto) {
+        let itemAdelanto = item(`${dia}: $${monto}<button class="eliminar">x</button>`, [
+            () => eliminarAdelanto(id, dia, beneficiados),
+            () => respaldar()
+        ])
+
+        respaldar()
+        return itemAdelanto
+    }
+
+    adelantoItems.querySelector('.entradas').prepend(selectSemana())
+
+    adelantoItems.querySelector('.entradas').querySelector('button').onclick = () => {
+
+        let dia = adelantoItems.querySelector('select').value
+        let monto = parseInt(adelantoItems.querySelector('.monto').value)
+
+        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
+        monto = validar(monto, monto < 0 || monto !== NaN, 'Monto no Valido')
+
+        if (dia && monto) {
+            agregarAdelanto(id, dia, monto, beneficiados)
+            adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(dia, monto))
+        }
+    }
+
+    //agregar dias faltantes
+    function itemDiaFaltante(dia) {
+        let itemDia = item(`${dia} <button class="eliminar">x</button>`, [
+            () => eliminarDiaFaltante(id, dia, beneficiados),
+            () => respaldar()
+        ])
+
+        respaldar()
+        return itemDia
+    }
+
+    let diaItems = seccion.querySelector('.dias-faltantes')
+
+    diaItems.querySelector('.entradas').prepend(selectSemana())
+
+    diasFaltantes.forEach(dia => {
+        diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
+    })
+
+    diaItems.querySelector('.entradas').querySelector('button').onclick = () => {
+        let dia = diaItems.querySelector('select').value
+
+        dia = validar(dia, dia.trim() === '', 'Dia no Valido')
+
+        if (dia) {
+            if (agregarDiasFalatantes(id, dia, beneficiados)) {
+                diaItems.querySelector('.lista-dias-faltantes').appendChild(itemDiaFaltante(dia))
+            }
+        }
+    }
+
+    //Eliminar Beneficiado
+    seccion.querySelector('.eliminar-beneficiado').onclick = () => {
+        beneficiados = eliminarBeneficiado(id, beneficiados)
+        seccion.remove()
+        respaldar()
+    }
+
+    return seccion
+}
 
 function selectSemana() {
     const dias = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
@@ -557,8 +669,8 @@ secciones.forEach(seccion => {
             let monto = parseInt(seccion.querySelector('input[type="number"]').value)
 
             dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
-            console.log(monto)
-            monto = validar(monto, monto < 0 || monto !== NaN, 'Ingresa un monto valido')
+            
+            monto = validar(monto, monto < 0, 'Ingresa un monto valido')
 
             if (dia && monto) {
                 if (agregarPropinas(dia, monto, propinas)) {
