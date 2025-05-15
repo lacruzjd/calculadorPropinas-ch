@@ -8,11 +8,16 @@ body {
     background-color: rgb(58, 58, 58);
 }
 
-section{
+section {
     background-color: rgb(101, 101, 101);
     margin: 10px;
     padding: 5px;
     border-radius: 10px;
+}
+
+.inputs {
+    padding: 10px;
+    background-color: #3f3f3f;
 }
 
 button,
@@ -20,14 +25,21 @@ input,
 select {
     border-radius: 10px;
     border: none;
+    padding: .2rem;
     width: 4rem;
-    background-color: rgb(220, 222, 223);
+    background-color: rgb(208, 210, 210);
     color: rgb(96, 96, 96);
 
 }
 
 button {
     cursor: pointer;
+}
+
+.eliminar {
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
 }
 
 button:hover {
@@ -42,47 +54,16 @@ img {
     border-radius: 50%;
 }
 
-header {
-    background: #333;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    width: 95%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-header button {
-background-color: rgb(169, 254, 254);
-    width: 5rem;
-    padding: 10px;
-}
-header button:hover {
-background-color: rgb(39, 255, 255);
-    width: 5rem;
-    padding: 10px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-}
-
-nav ul li {
-    margin-right: 20px;
-}
-
 h1 {
     font-weight: lighter;
     font-size: 1rem;
 }
 
 h2 {
+    font-weight: lighter;
+    font-size: 1.2rem;
     color: rgb(209, 209, 209);
+    margin-bottom: 1rem;
 }
 
 h4 {
@@ -91,7 +72,7 @@ h4 {
 }
 
 #app {
-    margin: 90px auto;
+    margin: 20px auto;
     max-width: 800px;
 }
 
@@ -111,18 +92,22 @@ h4 {
     align-items: center;
 }
 
-
 .adelantos,
 .dias-faltantes {
     background-color: #3f3f3f;
     margin: 10px 0 0;
 }
 
+.ficha-beneficiado .eliminar {
+    padding: 1px;
+
+}
+
 .entradas {
     margin: 10px 0 0;
     padding: 5px;
-    background-color: rgb(144, 184, 184);
-    border-radius: 10px
+    background-color: rgb(91, 110, 110);
+    border-radius: 10px;
 }
 
 .lista-dias-faltantes div,
@@ -163,33 +148,55 @@ h4 {
     margin: 4px;
 }
 
-#resultados div,
-#propinas div {
+#propinas div,
+#beneficiados div,
+#resultados div {
     border-radius: 10px;
 }
+
 #resultados strong {
     color: rgb(111, 221, 184);
     font-size: 1.5rem;
     border-radius: 10px;
 }
 
-.resultados{
+.resultados {
     padding: 10px;
     background-color: #3f3f3f;
 }
 
-.resultados span{
+.resultados span {
     margin: 10px 0;
     display: block;
     font-size: 0.8rem;
 }
 
+.nueva-semana,
+.resultados-totales {
+    width: auto;
+    float: right;
+    padding: 10px;
+
+}
+
 footer {
     background: #333;
-    color: white;
+    color: rgba(255, 255, 255, 0.711);
     padding: 5px;
+    font-size: 0.7rem;
     text-align: center;
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+
+#propinas .lista .notificacion {
+    width: 100%;
+    font-size: .7rem;
+    background-color: rgba(189, 221, 226, 0.521);
+}
+
+#propinas .inputs,
+#beneficiados .inputs {
+    height: 80px;
 }
