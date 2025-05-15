@@ -258,7 +258,7 @@ function inputsBeneficiados() {
     div.querySelector('#agregar-beneficiado').onclick = () => {
         let nombre = div.querySelector('input').value
 
-        nombre = validar(nombre, nombre.trim() === '', 'Nombre no Valido')
+        nombre = validar(nombre, nombre.trim() === '', 'Igresa un nombre de usuario')
 
         if (nombre) {
             agregarBeneficiado(nombre, beneficiados)
