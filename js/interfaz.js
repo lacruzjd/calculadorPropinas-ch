@@ -1,3 +1,25 @@
+// Obtener datos del respaldo
+// Obtener datos de usuarios api
+const URL = './db/beneficiados.json'
+
+async function getApi(url, nodo, plantilla) {
+    try {
+        let solicitud = await fetch(url)
+        let respuesta = await solicitud.json()
+
+        respuesta.forEach(data => {
+            let beneficiado = new Beneficiado()
+            beneficiado.nombre = data.nombre
+            beneficiado.avatar = data.avatar
+            beneficiados.push(beneficiado)
+            nodo.appendChild(plantilla(beneficiado))
+        })
+    } catch (e) {
+        console.log(e)
+        nodo.appendChild(error(`Error al cargar los datos ${e}`))
+    }
+}
+
 //Cargar objetos Beneficiados
 function procesarBeneficiados(data) {
     return data.map(beneficiadoGuardado => {
@@ -39,36 +61,16 @@ function setDatos(key, data) {
     return false
 }
 
-// Obtener datos del respaldo
 
-
-// Obtener datos de usuarios api
-const URL = './db/beneficiados.json'
-
-async function getApi(url, nodo, plantilla) {
-    try {
-        let solicitud = await fetch(url)
-        let respuesta = await solicitud.json()
-
-        respuesta.forEach(data => {
-            let beneficiado = new Beneficiado()
-            beneficiado.nombre = data.nombre
-            beneficiado.avatar = data.avatar
-            beneficiados.push(beneficiado)
-            nodo.appendChild(plantilla(beneficiado))
-        })
-    } catch (e) {
-        console.log(e)
-        nodo.appendChild(error(`Error al cargar los datos ${e}`))
-    }
-}
-
-// INTERFAZ
 //Cargar Datos
 let propinas = getDatos('propinas', procesarPropinas) || []
 let beneficiados = getDatos('beneficiados', procesarBeneficiados) || []
 let resultados = JSON.parse(localStorage.getItem('resultados')) || []
+let pozo = propinas.reduce((acc, propina) => acc + propina.monto, 0)
+setDatos('pozo', pozo)
 
+
+// INTERFAZ
 // Componentes de interfaz
 function seccionTemplate(seccionId, titulo, lista, inputs) {
     const seccion = document.createElement('section')
@@ -108,11 +110,15 @@ function selectSemana() {
 
 function itemConBotonEliminar(text, accionesBoton) {
     let li = document.createElement('div')
-    li.innerHTML = `${text}<button class="eliminar">x</buton>`
 
-    li.querySelector('button').onclick = () => {
-        accionesBoton()
-        li.remove()
+    if (accionesBoton) {
+        li.innerHTML = `${text}<button class="eliminar">x</buton>`
+        li.querySelector('button').onclick = () => {
+            accionesBoton()
+            li.remove()
+        }
+    } else {
+        li.innerHTML = `${text}`
     }
 
     return li
@@ -198,11 +204,26 @@ function seccionBeneficiado(beneficiado) {
         monto = validar(monto, monto < 0 || isNaN(monto), 'Monto no Valido')
 
         if (dia && monto) {
-            agregarAdelanto(id, dia, monto, beneficiados)
-            setDatos('beneficiados', beneficiados)
-            adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(dia, monto))
-            adelantoItems.querySelector('.monto').value = ''
+            const beneficadoAdelanto = agregarAdelanto(id, dia, monto, beneficiados, pozo)
+            if (beneficadoAdelanto) {
+                setDatos('beneficiados', beneficiados)
 
+                adelantoItems.querySelector('.lista-adelantos').querySelectorAll('div').forEach(item => item.remove())
+
+                beneficadoAdelanto.adelantos.forEach(adelanto => {
+                    adelantoItems.querySelector('.lista-adelantos').appendChild(itemAdelanto(adelanto.dia, adelanto.monto))
+                })
+
+                document.querySelector('#propinas').querySelector('.lista')
+                
+                document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo -= monto}</strong>`, null))
+                setDatos('pozo', pozo)
+
+                adelantoItems.querySelector('.monto').value = ''
+            }
+            else {
+                validar(null, true, `El monto debe ser menor que ${pozo}`)
+            }
         }
     }
 
@@ -310,6 +331,8 @@ function itemPropina(dia, monto) {
     )
 }
 
+
+
 function inputsPropinas() {
     let div = document.createElement('div')
     div.innerHTML = ` <input type="number" placeholder="Monto"></input>
@@ -326,13 +349,21 @@ function inputsPropinas() {
         dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
 
         monto = validar(monto, monto < 0 || isNaN(monto), 'Ingresa un monto valido')
-
         if (dia && monto) {
             if (agregarPropinas(dia, monto, propinas)) {
                 setDatos('propinas', propinas)
-                document.querySelector('#propinas').querySelector('.lista').appendChild(itemPropina(dia, monto))
+
+                document.querySelector('#propinas').querySelector('.lista').querySelectorAll('div').forEach(e => e.remove())
+
+                propinas.forEach(p => {
+                    document.querySelector('#propinas').querySelector('.lista').appendChild(itemPropina(p.dia, p.monto))
+                })
+
+                document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo += monto}</strong>`, null))
+                setDatos('pozo', pozo)
 
                 div.querySelector('input').value = ''
+
             }
         }
     }
@@ -390,3 +421,4 @@ document.querySelector('#generar-resultados').onclick = () => {
         document.querySelector('#resultados').querySelector('.lista').appendChild(seccionResultado(item))
     })
 }
+document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo}</strong>`, null))

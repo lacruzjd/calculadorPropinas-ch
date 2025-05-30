@@ -42,6 +42,13 @@
         "diasFaltantes": []
     },
     {
+        "id": 7,
+        "nombre": "Juaquin",
+        "avatar": "https://robohash.org/Juaquin",
+        "adelantos": [],
+        "diasFaltantes": []
+    },
+    {
         "id": 8,
         "nombre": "Alberto",
         "avatar": "https://robohash.org/Alberto",

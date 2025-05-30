@@ -173,12 +173,14 @@ function eliminarBeneficiado(id, lista) {
 }
 
 // Agregar adelantos
-function agregarAdelanto(id, dia, monto, lista) {
+function agregarAdelanto(id, dia, monto, lista, pozo) {
     let beneficiado = obtenerBeneficiadoId(id, lista)
 
-    if (beneficiado !== null && typeof dia === 'string' && typeof monto === 'number') {
+    if (beneficiado !== null && typeof dia === 'string' && typeof monto === 'number' && monto < pozo) {
         beneficiado.setAdelanto(dia, monto)
-        return true
+        return beneficiado
+    } else {
+        return false
     }
 }
 
@@ -215,10 +217,15 @@ function eliminarDiaFaltante(id, dia, lista) {
 //Agregar propina
 function agregarPropinas(diaSemana, monto, lista) {
     if (typeof diaSemana === 'string' && diaSemana.trim() !== '' && typeof monto === 'number') {
-        if (Propina.semana.includes(diaSemana.trim().toLowerCase())) {
+        if (Propina.semana.includes(diaSemana.trim().toLowerCase()) && !lista.some(e => e.dia === diaSemana)) {
             let propina = new Propina()
             propina.setPropina(diaSemana, monto)
             lista.push(propina)
+            return lista
+        } else {
+            lista.forEach(e => {
+                if (e.dia === diaSemana) e.monto += monto
+            })
             return lista
         }
     } else {
