@@ -13,7 +13,7 @@
         "adelantos": [],
         "diasFaltantes": []
     },
-    {
+{
         "id": 3,
         "nombre": "David",
         "avatar": "https://robohash.org/David",
@@ -42,13 +42,6 @@
         "diasFaltantes": []
     },
     {
-        "id": 7,
-        "nombre": "Juaquin",
-        "avatar": "https://robohash.org/Juaquin",
-        "adelantos": [],
-        "diasFaltantes": []
-    },
-    {
         "id": 8,
         "nombre": "Alberto",
         "avatar": "https://robohash.org/Alberto",
@@ -59,6 +52,20 @@
         "id": 9,
         "nombre": "Jander",
         "avatar": "https://robohash.org/Jander",
+        "adelantos": [],
+        "diasFaltantes": []
+},
+{
+        "id": 3,
+        "nombre": "Matias",
+        "avatar": "https://robohash.org/Matias",
+        "adelantos": [],
+        "diasFaltantes": []
+    },
+{
+        "id": 3,
+        "nombre": "Jesus",
+        "avatar": "https://robohash.org/Jesus",
         "adelantos": [],
         "diasFaltantes": []
     }
