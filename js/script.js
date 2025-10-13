@@ -50,14 +50,14 @@ class Beneficiado {
     }
 }
 class Propina {
-    static semana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
+    static semana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'restos']
     constructor() {
         this.dia = null
         this.monto = 0
     }
 
     setPropina(dia, monto) {
-        if (typeof monto === 'number' && monto > 0 && Propina.semana.includes(dia)) {
+        if (typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
             this.dia = dia
             this.monto = monto
         } else {

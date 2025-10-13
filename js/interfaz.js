@@ -36,6 +36,7 @@ function procesarBeneficiados(data) {
 
 //Cargar objetos Propinas
 function procesarPropinas(data) {
+    console.log(data)
     return data.map(valor => {
         const propina = new Propina()
         propina.setPropina(valor.dia, valor.monto)
@@ -61,14 +62,45 @@ function setDatos(key, data) {
     return false
 }
 
-
 //Cargar Datos
-let propinas = getDatos('propinas', procesarPropinas) || []
+const diasDeLaSemana = [
+    { dia: "lunes", monto: 0 },
+    { dia: "martes", monto: 0 },
+    { dia: "miércoles", monto: 0 },
+    { dia: "jueves", monto: 0 },
+    { dia: "viernes", monto: 0 },
+    { dia: "sábado", monto: 0 },
+    { dia: "domingo", monto: 0 },
+    { dia: "restos", monto: 0 }
+]
+
+if (getDatos('propinas', procesarPropinas) === undefined) {
+    setDatos('propinas', procesarPropinas(diasDeLaSemana))
+}
+
+let propinas = getDatos('propinas', procesarPropinas)
 let beneficiados = getDatos('beneficiados', procesarBeneficiados) || []
 let resultados = JSON.parse(localStorage.getItem('resultados')) || []
-let pozo = propinas.reduce((acc, propina) => acc + propina.monto, 0)
-setDatos('pozo', pozo)
+let pozo = 0
 
+function updatePozo() {
+    pozo = propinas.reduce((acc, propina) => acc + propina.monto, 0)
+    setDatos('pozo', pozo)
+
+    const lista = document.querySelector('#propinas').querySelector('.lista')
+
+    const pozoItem = itemConBotonEliminar(`Pozo: <strong>$${pozo}</strong>`, null)
+
+    // Elimina el anterior si existe
+    const anteriores = Array.from(lista.children).filter(child =>
+        child.textContent.includes('Pozo:')
+    )
+
+    anteriores.forEach(el => lista.removeChild(el))
+
+    // Agrega el nuevo
+    lista.appendChild(pozoItem)
+}
 
 // INTERFAZ
 // Componentes de interfaz
@@ -215,7 +247,7 @@ function seccionBeneficiado(beneficiado) {
                 })
 
                 document.querySelector('#propinas').querySelector('.lista')
-                
+
                 document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo -= monto}</strong>`, null))
                 setDatos('pozo', pozo)
 
@@ -274,7 +306,7 @@ function inputsBeneficiados() {
     let div = document.createElement('div')
     div.innerHTML = `<input type="text" placeholder="Nombre"></input>
     <button id="agregar-beneficiado">Agregar</button>
-    <button id="generar-resultados" class="resultados-totales">Generar Resultados</button>`
+    <button id="generar-resultados" class="resultados-totales">Repartir</button>`
 
     div.querySelector('#agregar-beneficiado').onclick = () => {
         let nombre = div.querySelector('input').value
@@ -332,43 +364,26 @@ function itemPropina(dia, monto) {
 }
 
 
-
 function inputsPropinas() {
     let div = document.createElement('div')
-    div.innerHTML = ` <input type="number" placeholder="Monto"></input>
-    <button id="agregar-propinas">Agregar</button>
-    <button id="nueva-semana" class="nueva-semana">Iniciar Semana</button>`
-
-    div.prepend(selectSemana())
-
-    div.querySelector('#agregar-propinas').onclick = () => {
-
-        let dia = div.querySelector('select').value
-        let monto = parseInt(div.querySelector('input').value)
-
-        dia = validar(dia, dia.trim() === '', 'Ingresa un dia valido')
-
-        monto = validar(monto, monto < 0 || isNaN(monto), 'Ingresa un monto valido')
-        if (dia && monto) {
-            if (agregarPropinas(dia, monto, propinas)) {
-                setDatos('propinas', propinas)
-
-                document.querySelector('#propinas').querySelector('.lista').querySelectorAll('div').forEach(e => e.remove())
-
-                propinas.forEach(p => {
-                    document.querySelector('#propinas').querySelector('.lista').appendChild(itemPropina(p.dia, p.monto))
-                })
-
-                document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo += monto}</strong>`, null))
-                setDatos('pozo', pozo)
-
-                div.querySelector('input').value = ''
-
-            }
-        }
-    }
-
+    div.innerHTML = `<button id="nueva-semana" class="nueva-semana">Iniciar Semana</button>`
     return div
+}
+
+const moduloPropinas = (item, index) => {
+    const div = document.createElement('div')
+    div.className = 'propinas'
+    div.innerHTML = `
+    <label for="dia-${index}">${item.dia}</label></br></br>
+    <input type="number" id="dia-${index}" value="${item.monto}" onchange="actualizarMonto(${index}, this.value)" min="0"></input>
+    `
+    return div
+}
+
+function actualizarMonto(index, valor) {
+    propinas[index].monto = parseFloat(valor)
+    setDatos('propinas', propinas)
+    updatePozo()
 }
 
 //Desplegar secciones
@@ -377,7 +392,7 @@ let main = document.getElementById('app')
 let secciones = [
     {
         nombre: 'Propinas',
-        lista: propinas.map(item => itemPropina(item.dia, item.monto)),
+        lista: propinas.map((item, index) => moduloPropinas(item, index)),
         inputs: [inputsPropinas()]
     },
     {
@@ -421,4 +436,6 @@ document.querySelector('#generar-resultados').onclick = () => {
         document.querySelector('#resultados').querySelector('.lista').appendChild(seccionResultado(item))
     })
 }
-document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo}</strong>`, null))
+
+updatePozo()
+

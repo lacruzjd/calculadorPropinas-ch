@@ -200,3 +200,7 @@ footer {
 #beneficiados .inputs {
     height: 80px;
 }
+
+.propinas input {
+    font-size: medium;
+}
