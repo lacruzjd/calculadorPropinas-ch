@@ -13,24 +13,10 @@
         "adelantos": [],
         "diasFaltantes": []
     },
-{
-        "id": 3,
-        "nombre": "David",
-        "avatar": "https://robohash.org/David",
-        "adelantos": [],
-        "diasFaltantes": []
-    },
     {
         "id": 5,
         "nombre": "Nacho",
         "avatar": "https://robohash.org/Nacho",
-        "adelantos": [],
-        "diasFaltantes": []
-    },
-    {
-        "id": 6,
-        "nombre": "Alejandro",
-        "avatar": "https://robohash.org/Alejandro",
         "adelantos": [],
         "diasFaltantes": []
     },

@@ -50,21 +50,25 @@ class Beneficiado {
     }
 }
 class Propina {
-    static semana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'restos']
+    static semana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'restos', 'pozo']
     constructor() {
         this.dia = null
         this.monto = 0
+        this.pozo = 0
     }
 
     setPropina(dia, monto) {
         if (typeof monto === 'number' && monto >= 0 && Propina.semana.includes(dia)) {
             this.dia = dia
             this.monto = monto
+            this.pozo += monto
         } else {
             return null
         }
     }
 }
+
+
 class CalculadorTotal {
     constructor() {
         this.beneficiados = []
@@ -250,4 +254,9 @@ function generarTotales(beneficados, propinas) {
 
     // retorna un array con los totales
     return calculadorPropina.calcular()
+}
+
+//Generar el pozo 
+function pozo() {
+    
 }

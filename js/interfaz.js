@@ -1,4 +1,3 @@
-// Obtener datos del respaldo
 // Obtener datos de usuarios api
 const URL = './db/beneficiados.json'
 
@@ -36,7 +35,6 @@ function procesarBeneficiados(data) {
 
 //Cargar objetos Propinas
 function procesarPropinas(data) {
-    console.log(data)
     return data.map(valor => {
         const propina = new Propina()
         propina.setPropina(valor.dia, valor.monto)
@@ -78,14 +76,20 @@ if (getDatos('propinas', procesarPropinas) === undefined) {
     setDatos('propinas', procesarPropinas(diasDeLaSemana))
 }
 
+if(localStorage.getItem('pozo') === null) {
+    localStorage.setItem('pozo', JSON.stringify(0))
+}
+
+
 let propinas = getDatos('propinas', procesarPropinas)
 let beneficiados = getDatos('beneficiados', procesarBeneficiados) || []
 let resultados = JSON.parse(localStorage.getItem('resultados')) || []
-let pozo = 0
+let pozo = parseFloat(JSON.parse(localStorage.getItem('pozo')))
 
-function updatePozo() {
-    pozo = propinas.reduce((acc, propina) => acc + propina.monto, 0)
-    setDatos('pozo', pozo)
+
+function updatePozo(valor) {
+    pozo = pozo + parseFloat(valor)
+    localStorage.setItem('pozo', pozo)
 
     const lista = document.querySelector('#propinas').querySelector('.lista')
 
@@ -100,6 +104,22 @@ function updatePozo() {
 
     // Agrega el nuevo
     lista.appendChild(pozoItem)
+}
+
+function updateBeneficiados() {
+    // Genera los resultados una sola vez
+    const resultados = generarTotales(beneficiados, propinas);
+    setDatos('resultados', resultados);
+
+    // Limpia la lista de beneficiados
+    const listaB = document.querySelector('#beneficiados')
+    listaB.innerHTML = ''; // Más eficiente que .childNodes.forEach(i => i.remove())
+
+    // Agrega los nuevos elementos
+    resultados.forEach(beneficiado => {
+        listaB.appendChild(seccionBeneficiado(beneficiado))
+    })
+
 }
 
 // INTERFAZ
@@ -181,7 +201,7 @@ function validar(dato, validacion, mensaje) {
 }
 
 function seccionBeneficiado(beneficiado) {
-    let { id, nombre, avatar, adelantos, diasFaltantes } = beneficiado
+    let { id, nombre, avatar, adelantos, diasFaltantes, totalEntrega } = beneficiado
     let seccion = document.createElement('section')
     seccion.id = id
     seccion.className = 'ficha-beneficiado'
@@ -206,6 +226,7 @@ function seccionBeneficiado(beneficiado) {
                     <button>Agregar</button>
                 </div>
             </div>
+            <p>${totalEntrega}</p>
             `
 
     // Adelantos
@@ -219,6 +240,7 @@ function seccionBeneficiado(beneficiado) {
             () => {
                 eliminarAdelanto(id, dia, beneficiados)
                 setDatos('beneficiados', beneficiados)
+                updatePozo()
             })
     }
 
@@ -251,7 +273,7 @@ function seccionBeneficiado(beneficiado) {
                 document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo -= monto}</strong>`, null))
                 setDatos('pozo', pozo)
 
-                adelantoItems.querySelector('.monto').value = ''
+              adelantoItems.querySelector('.monto').value = ''
             }
             else {
                 validar(null, true, `El monto debe ser menor que ${pozo}`)
@@ -381,10 +403,20 @@ const moduloPropinas = (item, index) => {
 }
 
 function actualizarMonto(index, valor) {
-    propinas[index].monto = parseFloat(valor)
-    setDatos('propinas', propinas)
-    updatePozo()
+    // Actualiza el monto en el array
+    propinas[index].monto = parseFloat(valor);
+
+    // Guarda los datos actualizados
+    setDatos('propinas', propinas);
+
+    // Actualiza el pozo total
+    updatePozo(valor);
+
+    updateBeneficiados()
+
+
 }
+
 
 //Desplegar secciones
 let main = document.getElementById('app')
@@ -437,5 +469,4 @@ document.querySelector('#generar-resultados').onclick = () => {
     })
 }
 
-updatePozo()
 
