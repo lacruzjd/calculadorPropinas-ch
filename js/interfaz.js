@@ -76,35 +76,35 @@ if (getDatos('propinas', procesarPropinas) === undefined) {
     setDatos('propinas', procesarPropinas(diasDeLaSemana))
 }
 
-if(localStorage.getItem('pozo') === null) {
-    localStorage.setItem('pozo', JSON.stringify(0))
-}
+// if(localStorage.getItem('pozo') === null) {
+//     localStorage.setItem('pozo', JSON.stringify(0))
+// }
 
 
 let propinas = getDatos('propinas', procesarPropinas)
 let beneficiados = getDatos('beneficiados', procesarBeneficiados) || []
 let resultados = JSON.parse(localStorage.getItem('resultados')) || []
-let pozo = parseFloat(JSON.parse(localStorage.getItem('pozo')))
+// let pozo = parseFloat(JSON.parse(localStorage.getItem('pozo')))
 
 
-function updatePozo(valor) {
-    pozo = pozo + parseFloat(valor)
-    localStorage.setItem('pozo', pozo)
+// function updatePozo(valor) {
+//     pozo = pozo + parseFloat(valor)
+//     localStorage.setItem('pozo', pozo)
 
-    const lista = document.querySelector('#propinas').querySelector('.lista')
+//     const lista = document.querySelector('#propinas').querySelector('.lista')
 
-    const pozoItem = itemConBotonEliminar(`Pozo: <strong>$${pozo}</strong>`, null)
+//     const pozoItem = itemConBotonEliminar(`Pozo: <strong>$${pozo}</strong>`, null)
 
-    // Elimina el anterior si existe
-    const anteriores = Array.from(lista.children).filter(child =>
-        child.textContent.includes('Pozo:')
-    )
+//     // Elimina el anterior si existe
+//     const anteriores = Array.from(lista.children).filter(child =>
+//         child.textContent.includes('Pozo:')
+//     )
 
-    anteriores.forEach(el => lista.removeChild(el))
+//     anteriores.forEach(el => lista.removeChild(el))
 
-    // Agrega el nuevo
-    lista.appendChild(pozoItem)
-}
+//     // Agrega el nuevo
+//     lista.appendChild(pozoItem)
+// }
 
 function updateBeneficiados() {
     // Genera los resultados una sola vez
@@ -270,13 +270,13 @@ function seccionBeneficiado(beneficiado) {
 
                 document.querySelector('#propinas').querySelector('.lista')
 
-                document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo -= monto}</strong>`, null))
-                setDatos('pozo', pozo)
+                // document.querySelector('#propinas').querySelector('.lista').appendChild(itemConBotonEliminar(`Pozo: <strong>$${pozo -= monto}</strong>`, null))
+                // setDatos('pozo', pozo)
 
               adelantoItems.querySelector('.monto').value = ''
             }
             else {
-                validar(null, true, `El monto debe ser menor que ${pozo}`)
+                // validar(null, true, `El monto debe ser menor que ${pozo}`)
             }
         }
     }
